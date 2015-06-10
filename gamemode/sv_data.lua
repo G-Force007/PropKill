@@ -98,8 +98,14 @@ if file.Exists( "propkill/settings.txt", "DATA" ) then
 	-- Make sure any new settings added are will be saved.
 	local changed = false
 
+	-- Any changes to default settings should reflect current settings
 	for k, v in pairs( PK.DefaultSettings ) do
-		if not PK.Settings[ k ] then
+		if not PK.Settings[ k ] or
+			PK.Settings[ k ].public != PK.DefaultSettings[ k ].public or
+			PK.Settings[ k ].min != PK.DefaultSettings[ k ].min or
+			PK.Settings[ k ].max != PK.DefaultSettings[ k ].max or
+			PK.Settings[ k ].type != PK.DefaultSettings[ k ].type or
+			PK.Settings[ k ].desc != PK.DefaultSettings[ k ].desc then
 			PK.Settings[ k ] = v
 			changed = true
 		end

@@ -125,9 +125,14 @@ function GM:InitPostEntity()
 	physData.MaxAngularVelocity	= 3636
 
 	physenv.SetPerformanceSettings(physData)
+	Msg(GetSetting("CleanupOnStart"))
 	if not PK or not GetSetting( "CleanupOnStart" ) then return end
 	for _, v in pairs( ents.GetAll() ) do
-		if not v:IsPlayer() and string.find( v:GetClass(), "prop_physics" ) or string.find( v:GetClass(), "prop_dynamic" ) then
+		if not v:IsPlayer() and string.find( v:GetClass(), "prop_physics" ) or
+			string.find( v:GetClass(), "prop_dynamic" ) or
+			string.find( v:GetClass(), "prop_door" ) or
+			string.find( v:GetClass(), "func_breakable_surf" ) or
+			string.find( v:GetClass(), "func_door" ) then
 			v:Remove()
 		end
 	end
