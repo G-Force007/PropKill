@@ -523,10 +523,10 @@ function AdminMenu()
 		SettingMenu:SetContents( Settings )
 		Menu:AddItem( SettingMenu )
 
-		local ModelMenu = vgui.Create( "DCollapsibleCategory" )
+		/*local ModelMenu = vgui.Create( "DCollapsibleCategory" )
 		ModelMenu:SetLabel( "Model blocklist" )
 
-		Menu:AddItem( ModelMenu )
+		Menu:AddItem( ModelMenu )*/
 	end
 
 	return Menu
