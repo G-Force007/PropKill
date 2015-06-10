@@ -489,11 +489,20 @@ function AdminMenu()
 				NumSlider:SetValue( math.Round( v.value ) )
 				NumSlider:SetDecimals( 0 )
 
-				NumSlider.OnValueChanged = function( panel, value )
-					RunConsoleCommand( "pk_setting", panel.Text, math.Round( value ) )
-					PK.Settings[ panel.Text ].value = value -- must save clientside wise.
-					panel:SetValue( value )
-				end
+				local old_value = math.Round( v.value )
+				timer.Create( "AdminMenu_Settings_" .. k, 0.5, 0, function()
+					if not NumSlider or not NumSlider:IsValid() then
+						return timer.Destroy( "AdminMenu_Settings_" .. k )
+					end
+
+					if not NumSlider:IsEditing() and old_value != NumSlider:GetValue() then
+						old_value = math.Round( NumSlider:GetValue() )
+
+						RunConsoleCommand( "pk_setting", NumSlider.Text, old_value )
+						PK.Settings[ NumSlider.Text ].value = old_value -- must save clientside wise.
+						NumSlider:SetValue( old_value )
+					end
+				end )
 
 				Settings:AddItem( NumSlider )
 			elseif v.type == SETTING_BOOLEAN then

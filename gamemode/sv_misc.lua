@@ -17,7 +17,7 @@ function SetSetting( key, value, ply )
 
     -- Update all the superadmins on the server
     for _, v in pairs( player.GetAll() ) do
-        if not PK.Settings[ key ].public and not v:IsSuperAdmin() or v == ply then continue end
+        if not PK.Settings[ key ].public and not v:IsSuperAdmin() then continue end
 
         local type = PK.Settings[ key ].type
         if type == SETTING_NUMBER then
