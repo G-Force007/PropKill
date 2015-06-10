@@ -132,7 +132,11 @@ function GM:InitPostEntity()
 			string.find( v:GetClass(), "prop_dynamic" ) or
 			string.find( v:GetClass(), "prop_door" ) or
 			string.find( v:GetClass(), "func_breakable_surf" ) or
-			string.find( v:GetClass(), "func_door" ) then
+			string.find( v:GetClass(), "func_door" ) or
+			string.find( v:GetClass(), "func_useableladder" ) or
+			string.find( v:GetClass(), "func_illusionary" ) or
+			string.find( v:GetClass(), "beam" ) or
+			string.find( v:GetClass(), "env_sprite" ) then
 			v:Remove()
 		end
 	end
