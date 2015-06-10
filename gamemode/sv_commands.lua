@@ -131,7 +131,7 @@ concommand.Add( "pk_startfight", function( ply, cmd, args )
     if ply == target then ply:Notify( "You can't verse yourself." ) return end
     target.RequestedFight = true
     target.Fightie = ply
-    target.Limit = tonumber( args[2] )
+    target.Limit = math.Round( tonumber( args[2] ) )
     
     target.Limit = math.Clamp( target.Limit, 5, 20 )
     ply:Notify( Format( "You sent a battle invite to %s to %s kills.", target:Nick(), target.Limit ) )

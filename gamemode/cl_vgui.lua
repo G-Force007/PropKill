@@ -337,7 +337,7 @@ function FightMenu()
 				local uniqueid = NULL
 				for _, v in pairs( player.GetAll() ) do if v:Nick() == List:GetValue() then uniqueid = v:UniqueID() end end
 
-				RunConsoleCommand( "pk_startfight", uniqueid, NumSlider:GetValue() )
+				RunConsoleCommand( "pk_startfight", uniqueid, math.Round( NumSlider:GetValue() ) )
 				F4Menu:SetVisible( false )
 			else
 				chat:AddText( Color( 100, 255, 255, 255 ), "Select a player before fighting." )
