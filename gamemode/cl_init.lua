@@ -34,6 +34,7 @@ PK.HudSettings[ "text_a" ] = CreateClientConVar( "pk_text_a", "255", true, true 
 
 include( "sh_teams.lua" ) -- sh_teams.lua needs to be loaded before sh_init.lua
 include( "sh_init.lua" )
+include( "sh_misc.lua" )
 include( "cl_hud.lua" )
 include( "cl_networking.lua" )
 include( "cl_vgui.lua" )

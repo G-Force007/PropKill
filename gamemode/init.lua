@@ -19,11 +19,13 @@ AddCSLuaFile( "cl_hud.lua" )
 AddCSLuaFile( "cl_networking.lua" )
 AddCSLuaFile( "cl_dermaskin.lua" )
 AddCSLuaFile( "sh_init.lua" )
+AddCSLuaFile( "sh_misc.lua" )
 AddCSLuaFile( "sh_scoreboard.lua" )
 AddCSLuaFile( "sh_teams.lua" )
 
 include( "sh_teams.lua" ) -- sh_teams needs to be loaded before sh_init.lua
 include( "sh_init.lua" )
+include( "sh_misc.lua" )
 include( "sv_commands.lua" )
 include( "sv_misc.lua" )
 include( "sv_data.lua" )

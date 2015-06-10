@@ -1,3 +1,9 @@
+/*---------------------------------------------------------
+   Name: sh_init.lua
+   Desc: Includes everything, does everything. The gamemode DEPENDS on this.
+   Author: G-Force Connections (STEAM_0:1:19084184)
+---------------------------------------------------------*/
+
 PK.Version = 2.7
 
 DeriveGamemode( "sandbox" )

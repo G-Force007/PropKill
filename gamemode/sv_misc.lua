@@ -1,14 +1,10 @@
--- Author: G-Force Connections (STEAM_0:1:19084184)
-PK.Leading = NULL
-
 /*---------------------------------------------------------
-   Name: GetSetting
-   Desc: Gets server settings.
+   Name: sv_misc.lua
+   Desc: Misc stuff I couldnt find anywhere else to put
+   Author: G-Force Connections (STEAM_0:1:19084184)
 ---------------------------------------------------------*/
-function GetSetting( key )
-    local table = PK.Settings[ key ]
-    return table.value or nil
-end
+
+PK.Leading = NULL
 
 /*---------------------------------------------------------
    Name: SetSetting

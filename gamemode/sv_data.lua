@@ -81,7 +81,7 @@ PK.DefaultSettings[ "CleanupOnDisconnect" ] = { value = true, type = SETTING_BOO
 PK.DefaultSettings[ "DenyDeadSpawning" ] = { value = true, type = SETTING_BOOLEAN, desc = [[Deny spawning props while a player is dead?]] }
 PK.DefaultSettings[ "DeathRagdolls" ] = { value = true, type = SETTING_BOOLEAN, desc = [[Have ragdolls spawn when a player dies?]] }
 PK.DefaultSettings[ "DefaultFrags" ] = { value = 15, min = 5, max = 15, type = SETTING_NUMBER, desc = [[Default kills required before a fight is ended.]] }
-PK.DefaultSettings[ "PlayerSpawnHealth" ] = { value = 100, min = 1, max = 100, type = SETTING_NUMBER, desc = [[Spawn health of a player]] }
+PK.DefaultSettings[ "PlayerSpawnHealth" ] = { value = 100, min = 1, max = 100, public = true, type = SETTING_NUMBER, desc = [[Spawn health of a player]] }
 PK.DefaultSettings[ "WalkSpeed" ] = { value = 300, min = 300, max = 500, type = SETTING_NUMBER, desc = [[Players walking speed, NO SHIFT]] }
 PK.DefaultSettings[ "RunSpeed" ] = { value = 500, min = 500, max = 700, type = SETTING_NUMBER, desc = [[Players running speed, WITH SHIFT]] }
 PK.DefaultSettings[ "FightCoolDown" ] = { value = 300, min = 60, max = 600, type = SETTING_NUMBER, desc = [[Cool down before another player can fight]] }
