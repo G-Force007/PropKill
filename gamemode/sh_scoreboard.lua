@@ -4,63 +4,80 @@
    Author: G-Force Connections (STEAM_0:1:19084184)
 ---------------------------------------------------------*/
 
+Scoreboard = {}
+
 if SERVER then
+	-- Add to the pool
+	util.AddNetworkString("SUIScoreboardPlayerColor")
 
-	AddCSLuaFile( "scoreboard/admin_buttons.lua" )
-	AddCSLuaFile( "scoreboard/cl_tooltips.lua" )
-	AddCSLuaFile( "scoreboard/player_frame.lua" )
-	AddCSLuaFile( "scoreboard/player_infocard.lua" )
-	AddCSLuaFile( "scoreboard/player_row.lua" )
-	AddCSLuaFile( "scoreboard/scoreboard.lua" )
-	
+	-- Send required files to client
+	AddCSLuaFile("scoreboard/scoreboard.lua")
+	AddCSLuaFile("scoreboard/admin_buttons.lua")
+	AddCSLuaFile("scoreboard/tooltips.lua")
+	AddCSLuaFile("scoreboard/player_frame.lua")
+	AddCSLuaFile("scoreboard/player_infocard.lua")
+	AddCSLuaFile("scoreboard/player_row.lua")
+	AddCSLuaFile("scoreboard/scoreboard.lua")
+	AddCSLuaFile("scoreboard/library.lua")
+	AddCSLuaFile("scoreboard/net_client.lua")
+
+	Scoreboard.SendColor = function (ply)
+	if evolve == nil then
+			tColor = team.GetColor( ply:Team())      
+		else
+			tColor = evolve.ranks[ ply:EV_GetRank() ].Color
+		end
+
+		net.Start("SUIScoreboardPlayerColor")
+		net.WriteTable(tColor)
+		net.Send(ply)
+	end
+
+	--- When the player joins the server we need to restore the NetworkedInt's
+	Scoreboard.PlayerSpawn = function ( ply )
+	timer.Simple( 5, function() Scoreboard.UpdatePlayerRatings( ply ) end) -- Wait a few seconds so we avoid timeouts.
+	Scoreboard.SendColor(ply)
+	end
 else
+	Scoreboard.vgui = nil
+	Scoreboard.playerColor = Color(255, 155, 0, 255)
+	include( "scoreboard/library.lua" )
 	include( "scoreboard/scoreboard.lua" )
+	include( "scoreboard/net_client.lua" )
 
-	SuiScoreBoard = nil
-	
-	timer.Simple( 1.5, function()
-		
+	 timer.Simple( 1.5, function()
 		function GAMEMODE:CreateScoreboard()
-		
-			if ( ScoreBoard ) then
-			
-				ScoreBoard:Remove()
-				ScoreBoard = nil
-				
+			if Scoreboard.vgui then
+				Scoreboard.vgui:Remove()
+				Scoreboard.vgui = nil
 			end
-			
-			SuiScoreBoard = vgui.Create( "suiscoreboard" )
-			
-			return true
 
+			Scoreboard.vgui = vgui.Create( "suiscoreboard" )
+
+			return true
 		end
 
 		function GAMEMODE:ScoreboardShow()
-		
-			if not SuiScoreBoard then
+			if not Scoreboard.vgui then
 				self:CreateScoreboard()
 			end
 
 			GAMEMODE.ShowScoreboard = true
 			gui.EnableScreenClicker( true )
 
-			SuiScoreBoard:SetVisible( true )
-			SuiScoreBoard:UpdateScoreboard( true )
-			
-			return true
+			Scoreboard.vgui:SetVisible( true )
+			Scoreboard.vgui:UpdateScoreboard( true )
 
+			return true
 		end
-		
+
 		function GAMEMODE:ScoreboardHide()
-		
 			GAMEMODE.ShowScoreboard = false
 			gui.EnableScreenClicker( false )
 
-			SuiScoreBoard:SetVisible( false )
-			
+			Scoreboard.vgui:SetVisible( false )
+
 			return true
-			
 		end
-		
 	end )
 end

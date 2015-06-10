@@ -1,6 +1,6 @@
 /*---------------------------------------------------------
    Name: ULX Shit
-   Desc: Commands and shit, that'll soon be changed due to stuff going in F4 menu.
+   Desc: Commands and shit, thatll soon be changed due to stuff going in F4 menu.
 ---------------------------------------------------------*/
 
 local CATEGORY_NAME = "Utility"
@@ -137,17 +137,21 @@ stopfight:help( "Stop the fight" )
 ------------------------------ Add Custom Spawn ------------------------------
 function ulx.addcustomspawn( calling_ply, team )
     if string.lower( team ) == "spectator" then calling_ply:Notify( "You can't set Spectator's spawn point." ) end
+
     for k, v in pairs( Teams ) do
         if v.command == string.lower( team ) then
             if not PK.CustomSpawns[ game.GetMap() ] then PK.CustomSpawns[ game.GetMap() ] = {} end
             if not PK.CustomSpawns[ game.GetMap() ][ v.command  ] then PK.CustomSpawns[ game.GetMap() ][ v.command  ] = {} end
+
             local TABLE = {}
             TABLE[ "Pos" ] = calling_ply:GetPos()
             TABLE[ "Angle" ] = calling_ply:EyeAngles()
             table.insert( PK.CustomSpawns[ game.GetMap() ][ v.command ], TABLE )
+
             calling_ply:Notify( "Successfully added team spawn for " .. v.command .. " at your location." )
 
             WritePKCustomSpawns()
+
             return
         end
     end
@@ -161,6 +165,7 @@ addcustomspawn:help( "Add a custom spawn for the map you're currently on" )
 ------------------------------ Reset Custom Spawns ------------------------------
 function ulx.resetcustomspawns( calling_ply, team )
     if string.lower( team ) == "spectator" then calling_ply( "You can't reset Spectator's spawn point." ) end
+
     for k, v in pairs( Teams ) do
         if v.command == string.lower( team )then
             PK.CustomSpawns[ game.GetMap() ][ v.command  ] = nil
