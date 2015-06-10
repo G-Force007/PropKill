@@ -1,0 +1,5 @@
+make proper credits
+make an readme
+deattach the gm from ulx
+fix the lag issues
+fix the missing icons

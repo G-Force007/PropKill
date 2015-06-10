@@ -1,0 +1,12 @@
+"PropKill"
+{
+    "name"  "Propkill by G-Force"
+    "version"   "2"
+
+    "author_name"   "G-Force"
+
+	"mappattern"
+	{
+		"1"		"^rp_"
+	}
+}
