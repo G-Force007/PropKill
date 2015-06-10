@@ -320,17 +320,23 @@ end
 
 function GM:DrawHealthBar()
 	local Health = LocalPlayer():Health()
+	local MaxHealth = 100
 
+	if istable(PK.Settings) and PK.Settings["PlayerSpawnHealth"] != nil then
+		MaxHealth = PK.Settings["PlayerSpawnHealth"].value
+	end
+		
 	if LocalPlayer():GetGNWVar( "IsSpectating", false ) then Health = 0 end
 
 	if Target and Target:IsPlayer() then
 		Health = Target:Health()
 	end
+	
 
 	self.HealthBar = jdraw.NewProgressBar(self.PlayerBox, true)
 	self.HealthBar:SetDemensions(3, 3, self.PlayerBox.Size.Width - 6, 20)
 	self.HealthBar:SetStyle( 4, Color( PK.HudSettings[ "health_r" ]:GetInt(), PK.HudSettings[ "health_g" ]:GetInt(), PK.HudSettings[ "health_b" ]:GetInt(), PK.HudSettings[ "health_a" ]:GetInt() ) )
-	self.HealthBar:SetValue( math.Clamp( Health, 0, 100 ), 100)
+	self.HealthBar:SetValue( math.Clamp( Health, 0, MaxHealth ), MaxHealth)
 	self.HealthBar:SetText("UiBold", "Health " .. Health, clrDrakGray)
 	jdraw.DrawProgressBar(self.HealthBar)
 end
