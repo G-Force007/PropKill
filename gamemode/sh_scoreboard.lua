@@ -23,7 +23,7 @@ if SERVER then
 
 	Scoreboard.SendColor = function (ply)
 	if evolve == nil then
-			tColor = team.GetColor( ply:Team())      
+			tColor = team.GetColor( ply:Team() )      
 		else
 			tColor = evolve.ranks[ ply:EV_GetRank() ].Color
 		end
@@ -35,8 +35,7 @@ if SERVER then
 
 	--- When the player joins the server we need to restore the NetworkedInt's
 	Scoreboard.PlayerSpawn = function ( ply )
-	timer.Simple( 5, function() Scoreboard.UpdatePlayerRatings( ply ) end) -- Wait a few seconds so we avoid timeouts.
-	Scoreboard.SendColor(ply)
+		Scoreboard.SendColor(ply)
 	end
 else
 	Scoreboard.vgui = nil

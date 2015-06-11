@@ -18,11 +18,11 @@ surface.CreateFont( "UiBold", {
 )
 
 surface.CreateFont( "DamageIndicFont6", {
-	font    = "coolvetica",
-	size    = 35,
-	weight  = 400,
-	antialias = false,
-	shadow = false
+		font    = "coolvetica",
+		size    = 35,
+		weight  = 400,
+		antialias = false,
+		shadow = false
 	}
 )
 
@@ -154,8 +154,8 @@ function jdraw.QuickDrawGrad(clrColor, intX, intY, intWidth, intHeight, intDir)
 	surface.DrawTexturedRect(intX, intY, intWidth, intHeight)
 end
 
-PK.MessageToRender = {}
-PK.DamageToRender = {}
+PK.MessageToRender = PK.MessageToRender or {}
+PK.DamageToRender = PK.DamageToRender or {}
 local ShowLastMessage
 local Target
 
@@ -382,8 +382,5 @@ end
 
 function GM:HUDShouldDraw( name )
 	local Blocked = { "CHudHealth", "CHudBattery", "CHudAmmo", "CHudSecondaryAmmo", "CHudWeaponSelection" }
-	if table.HasValue( Blocked, name ) then
-		return false
-	end
-	return true
+	return not table.HasValue( Blocked, name )
 end

@@ -4,7 +4,7 @@
    Author: G-Force Connections (STEAM_0:1:19084184)
 ---------------------------------------------------------*/
 
-PK.Achievements = {}
+PK.Achievements = PK.Achievements or {}
 
 local Stuff = PK.Achievements
 

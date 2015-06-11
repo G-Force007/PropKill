@@ -4,7 +4,7 @@
    Author: G-Force Connections (STEAM_0:1:19084184)
 ---------------------------------------------------------*/
 
-PK.Version = 2.8
+PK.Version = 2.9
 
 DeriveGamemode( "sandbox" )
 
@@ -40,3 +40,7 @@ TEAM_BLUE = AddTeam( "Blue Team", Color( 30, 144, 255, 255 ), {
     "models/player/gasmask.mdl",
     "models/player/riot.mdl"},
 [[Blue Team vs Red Team.]], "blueteam" )
+
+function GM:Msg( message )
+  Msg( Format( "PKv%0.1f: %s\n", PK.Version, message ) )
+end

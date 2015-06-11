@@ -7,6 +7,15 @@
 PK.Leading = NULL
 
 /*---------------------------------------------------------
+   Name: GetSetting
+   Desc: Gets server settings.
+---------------------------------------------------------*/
+function GetSetting( key, default )
+    local table = PK.Settings[ key ]
+    return table and table.value or default
+end
+
+/*---------------------------------------------------------
    Name: SetSetting
    Desc: Sets server settings.
 ---------------------------------------------------------*/
@@ -34,7 +43,7 @@ function SetSetting( key, value, ply )
                 net.WriteString( key )
                 net.WriteInt( type, 32 )
                 net.WriteString( PK.Settings[ key ].desc )
-                net.WriteBit( value )
+                net.WriteBool( value )
             net.Send( v )
         end
     end

@@ -145,10 +145,9 @@ PK.Settings = PK.Settings or {}
 
 net.Receive( "Setting", function()
     local name = net.ReadString()
-    local type = net.ReadInt(32)
+    local type = net.ReadInt( 32 )
     local desc = net.ReadString()
-	
-	  if not PK.Settings[ name ] then Msg( Format( "PKv2 registering setting: %s\n", name ) ) else Msg( Format( "PKv2 updating setting: %s\n", name ) ) end
+    local exists = PK.Settings[ name ]
 
     PK.Settings[ name ] = {}
     PK.Settings[ name ].type = type
@@ -159,7 +158,13 @@ net.Receive( "Setting", function()
         PK.Settings[ name ].min = net.ReadInt(32) or PK.Settings[ name ].min
         PK.Settings[ name ].max = net.ReadInt(32) or PK.Settings[ name ].max
     elseif type == SETTING_BOOLEAN then
-        PK.Settings[ name ].value = net.ReadBit()
+        PK.Settings[ name ].value = net.ReadBool()
+    end
+
+    if not exists then
+      GAMEMODE:Msg( Format( "Registered setting ID: %s Value: %s", name, tostring( PK.Settings[ name ].value ) ) )
+    else
+      GAMEMODE:Msg( Format( "Updated setting ID: %s Value: %s", name, tostring( PK.Settings[ name ].value ) ) )
     end
 end )
 
@@ -175,7 +180,7 @@ net.Receive( "SendNotify", function()
     Message.posy = ScrH() - ( 26 * 5 )
     table.insert( PK.MessageToRender, Message )
 
-    Msg( Message.text .. "\n" )
+    GAMEMODE:Msg( Message.text )
 end )
 
 /*---------------------------------------------------------

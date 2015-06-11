@@ -34,12 +34,10 @@ PK.HudSettings[ "text_a" ] = CreateClientConVar( "pk_text_a", "255", true, true 
 
 include( "sh_teams.lua" ) -- sh_teams.lua needs to be loaded before sh_init.lua
 include( "sh_init.lua" )
-include( "sh_misc.lua" )
-include( "cl_hud.lua" )
-include( "cl_networking.lua" )
-include( "cl_vgui.lua" )
---include( "cl_dermaskin.lua" )
 include( "sh_scoreboard.lua" )
+include( "cl_networking.lua" )
+include( "cl_hud.lua" )
+include( "cl_vgui.lua" )
 
 CreateClientConVar( "pk_playermodel", "", true, true )
 
@@ -71,6 +69,15 @@ function GM:ShouldCollide( ent1, ent2 )
 	if ent1:IsPlayer() and ent2:IsPlayer() and PK.Settings[ "NocolidePlayers" ] and PK.Settings[ "NocolidePlayers" ].value then return false end
 
 	return true -- colide if they're not a player :)
+end
+
+/*---------------------------------------------------------
+   Name: GetSetting
+   Desc: Gets server settings.
+---------------------------------------------------------*/
+function GetSetting( key, default )
+    local table = PK.Settings[ key ]
+    return table and table.value or default
 end
 
 Msg( [[/==================================================/

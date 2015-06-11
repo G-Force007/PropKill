@@ -4,6 +4,8 @@
    Author: G-Force Connections (STEAM_0:1:19084184)
 ---------------------------------------------------------*/
 
+include( "sv_misc.lua" )
+
 if not file.IsDir( "propkill", "DATA" ) then file.CreateDir( "propkill" ) end
 
 /*---------------------------------------------------------
@@ -22,7 +24,7 @@ end
 ---------------------------------------------------------*/
 function WritePKSettings()
     file.Write( "propkill/settings.txt", util.TableToJSON( PK.Settings ) )
-    Msg( "PKv2: Saved settings.\n" )
+    GM:Msg( "Saved settings." )
 end
 
 /*---------------------------------------------------------
@@ -31,7 +33,7 @@ end
 ---------------------------------------------------------*/
 function WritePKCustomSpawns()
     file.Write( "propkill/customspawns.txt", util.TableToJSON( PK.CustomSpawns ) )
-    Msg( "PKv2: Saved custom spawns.\n" )
+    GM:Msg( "Saved custom spawns." )
 end
 
 /*---------------------------------------------------------
@@ -39,33 +41,33 @@ end
    Desc: Saves data every 5 minutes
 ---------------------------------------------------------*/
 timer.Create( "AutoSaveTimer", 300, 0, function()
-	Msg( "PKv2: Saving stats...\n" )
+	GM:Msg( "Saving stats..." )
 
 	file.Write( "propkill/sscores.txt", util.TableToJSON( PK.Scores ) )
-    Msg( "PKv2: Saved player stats...\n" )
+    GM:Msg( "Saved player stats..." )
 
 	file.Write( "propkill/propspawns.txt", util.TableToJSON( PK.PropSpawns ) )
-	Msg( "PKv2: Saved prop spawns...\n" )
+	GM:Msg( "Saved prop spawns..." )
 
-	Msg( "PKv2: Completed saving stats...\n" )
+	GM:Msg( "Completed saving stats..." )
 end )
 
 /*---------------------------------------------------------
    Name: Scores
    Desc: Loads players scores.
 ---------------------------------------------------------*/
-PK.Scores = {}
+PK.Scores = PK.Scores or {}
 
 if file.Exists( "propkill/sscores.txt", "DATA" ) then
 	PK.Scores = util.JSONToTable( file.Read( "propkill/sscores.txt", "DATA" ) )
-	Msg( "PKv2: Successfully loaded " .. table.Count( PK.Scores ) .. " users.\n" )
+	GM:Msg( "Successfully loaded " .. table.Count( PK.Scores ) .. " users." )
 end
 
 /*---------------------------------------------------------
    Name: Settings
    Desc: Loads the settings for the gamemode.
 ---------------------------------------------------------*/
-PK.Settings = {}
+PK.Settings = PK.Settings or {}
 
 /* Default settings
    Format is
@@ -73,7 +75,7 @@ PK.Settings = {}
 
    Adding public = true to the table makes it so EVERY player will know this setting, this is not recommended. You should only use this in such cases EVERY client needs to know the setting, like for no-colide hooks.
 */
-PK.DefaultSettings = {}
+PK.DefaultSettings = PK.DefaultSettings or {}
 PK.DefaultSettings[ "Cleanup" ] = { value = true, type = SETTING_BOOLEAN, desc = [[Clean up players props after they die?]] }
 PK.DefaultSettings[ "CleanupTime" ] = { value = 2, min = 2, max = 20, type = SETTING_NUMBER, desc = [[Clean up time before a players props are cleaned up?]] }
 PK.DefaultSettings[ "CleanupOnStart" ] = { value = true, type = SETTING_BOOLEAN, desc = [[Clean the servers props, aka doors and other rubbish at map change?]] }
@@ -93,7 +95,7 @@ PK.DefaultSettings[ "DeathTime" ] = { value = 1, min = 1, max = 10, type = SETTI
 
 if file.Exists( "propkill/settings.txt", "DATA" ) then
 	PK.Settings = util.JSONToTable( file.Read( "propkill/settings.txt", "DATA" ) )
-	Msg( "PKv2: Successfully loaded " .. table.Count( PK.Settings ) .. " settings.\n" )
+	GM:Msg( "Successfully loaded " .. table.Count( PK.Settings ) .. " settings." )
 
 	-- Make sure any new settings added are will be saved.
 	local changed = false
@@ -116,11 +118,11 @@ if file.Exists( "propkill/settings.txt", "DATA" ) then
 	for k, v in pairs( PK.Settings ) do if not PK.DefaultSettings[ k ] then PK.Settings[ k ] = nil changed = true end end
 
 	if changed then
-		ErrorNoHalt( "PKv2: New setting(s) or default missing setting(s) has been added to PK.Settings, saving file...\n" )
+		GM:Msg( "New setting(s) or default missing setting(s) has been added to PK.Settings, saving file..." )
 		WritePKSettings()
 	end -- modified it with default commands so save the file.
 else
-	Msg( "PKv2: There is no propkill/settings.txt, writing a new one with default settings.\n" )
+	GM:Msg( "There is no propkill/settings.txt, writing a new one with default settings." )
 	PK.Settings = PK.DefaultSettings
 	WritePKSettings() -- Save these settings.
 end
@@ -129,7 +131,7 @@ end
    Name: BlockedModels
    Desc: Loads players Blocked Models.
 ---------------------------------------------------------*/
-PK.BlockedModels = {}
+PK.BlockedModels = PK.BlockedModels or {}
 
 PK.DefaultBlockedModels = {
 	"models/props_combine/combinetrain02b.mdl",
@@ -176,10 +178,10 @@ PK.DefaultBlockedModels = {
 
 if file.Exists( "propkill/blockedmodels.txt", "DATA" ) then
 	PK.BlockedModels = util.JSONToTable( file.Read( "propkill/blockedmodels.txt", "DATA" ) )
-	Msg( "PKv2: Successfully loaded " .. table.Count( PK.BlockedModels ) .. " blocked models.\n" )
+	GM:Msg( "Successfully loaded " .. table.Count( PK.BlockedModels ) .. " blocked models." )
 else
 	PK.BlockedModels = PK.DefaultBlockedModels
-	ErrorNoHalt( "PKv2: There is no propkill/blockedmodels.txt, writing a new one with default blocked models.\n" )
+	GM:Msg( "There is no propkill/blockedmodels.txt, writing a new one with default blocked models." )
 
 	file.Write( "propkill/blockedmodels.txt", util.TableToJSON( PK.BlockedModels ) )
 end
@@ -189,12 +191,12 @@ end
    Desc: Loads precachables and spawned Props
 ---------------------------------------------------------*/
 
-PK.PropSpawns = {}
-PK.Precachables = {}
+PK.PropSpawns = PK.PropSpawns or {}
+PK.Precachables = PK.Precachables or {}
 
 if file.Exists( "propkill/propspawns.txt", "DATA" ) then
 	PK.PropSpawns = util.JSONToTable( file.Read( "propkill/propspawns.txt", "DATA" ) )
-	Msg( "PKv2: Successfully loaded " .. table.Count( PK.PropSpawns ) .. " spawned props.\n" )
+	GM:Msg( "Successfully loaded " .. table.Count( PK.PropSpawns ) .. " spawned props." )
 end
 
 -- delete blocked models from the list :D
@@ -216,9 +218,9 @@ end
    Desc: New feature made for PoKi Lua, good suggestion V1 had it, now V2 will also have it :)
 ---------------------------------------------------------*/
 
-PK.CustomSpawns = {}
+PK.CustomSpawns = PK.CustomSpawns or {}
 
 if file.Exists( "propkill/customspawns.txt", "DATA" ) then
 	PK.CustomSpawns = util.JSONToTable( file.Read( "propkill/customspawns.txt", "DATA" ) )
-	Msg( "PKv2: Successfully loaded custom spawns for " .. table.Count( PK.CustomSpawns ) .. " map(s).\n" )
+	GM:Msg( "Successfully loaded custom spawns for " .. table.Count( PK.CustomSpawns ) .. " map(s)." )
 end

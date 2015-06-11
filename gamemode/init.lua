@@ -17,35 +17,20 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "cl_vgui.lua" )
 AddCSLuaFile( "cl_hud.lua" )
 AddCSLuaFile( "cl_networking.lua" )
-AddCSLuaFile( "cl_dermaskin.lua" )
 AddCSLuaFile( "sh_init.lua" )
-AddCSLuaFile( "sh_misc.lua" )
 AddCSLuaFile( "sh_scoreboard.lua" )
 AddCSLuaFile( "sh_teams.lua" )
 
 include( "sh_teams.lua" ) -- sh_teams needs to be loaded before sh_init.lua
 include( "sh_init.lua" )
-include( "sh_misc.lua" )
 include( "sv_commands.lua" )
-include( "sv_misc.lua" )
 include( "sv_data.lua" )
+include( "sv_misc.lua" )
 include( "sv_player.lua" )
 include( "sh_scoreboard.lua" )
 include( "sv_entity.lua" )
 include( "sv_achievements.lua" )
 include( "sv_networking.lua")
-
-----------------------------------------------------------
---					FastDL 								--
-----------------------------------------------------------
-
-resource.AddFile( "materials/gui/silkicons/emoticon_smile.vmt" )
-resource.AddFile( "materials/gui/silkicons/exclamation.vmt" )
-resource.AddFile( "materials/gui/silkicons/heart.vmt" )
-resource.AddFile( "materials/gui/silkicons/palette.vmt" )
-resource.AddFile( "materials/gui/silkicons/star.vmt" )
-resource.AddFile( "materials/gui/silkicons/user.vmt" )
-resource.AddFile( "materials/gui/silkicons/wrench.vmt" )
 	
 ----------------------------------------------------------
 --					Default Commands					--
@@ -57,23 +42,22 @@ RunConsoleCommand( "prop_active_gib_max_fade_time", 1 )
 RunConsoleCommand( "props_break_max_pieces", 0 )
 RunConsoleCommand( "props_break_max_pieces_perframe", 0 )
 
---RunConsoleCommand( "sbox_maxprops", 10 )
---RunConsoleCommand( "sbox_noclip", 0 )
---RunConsoleCommand( "sbox_godmode", 0 )
---RunConsoleCommand( "sbox_plpldamage", 0 )
+RunConsoleCommand( "sbox_maxprops", 10 )
+RunConsoleCommand( "sbox_noclip", 0 )
+RunConsoleCommand( "sbox_godmode", 0 )
 
 function GM:ShutDown()
-	Msg( "PKv2: Saving stats...\n" )
+	self:Msg( "Saving stats..." )
 	file.Write( "propkill/sscores.txt", util.TableToJSON( PK.Scores ) )
-    Msg( "PKv2: Saved player stats...\n" )
+    self:Msg( "Saved player stats..." )
 
-    Msg( "PKv2: Saving prop spawns...\n" )
+    self:Msg( "Saving prop spawns..." )
 	file.Write( "propkill/propspawns.txt", util.TableToJSON( PK.PropSpawns ) )
-	Msg( "PKv2: Saved prop spawns...\n" )
+	self:Msg( "Saved prop spawns..." )
 
-	Msg( "PKv2: Completed saving gamemode...\n" )
+	self:Msg( "Completed saving gamemode..." )
 
-	Msg( "PKv2: Successfully shut down/changed level, your files have been saved.\n" )
+	self:Msg( "Successfully shut down/changed level, your files have been saved." )
 end
 
 
