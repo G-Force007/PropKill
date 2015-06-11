@@ -7,9 +7,8 @@ An Propkill Gamemode.
 ![Interface](http://i.imgur.com/1MBPGLj.jpg)
 
 ### Installation
-1. Upload the *propkill-master* folder to your Garry's Mod gamemodes folder.
-2. Rename it to propkill.
-3. Join your server and test it out!
+1. Save into folder named *propkill* and place inside Garry's Mod gamemodes folder.
+2. Join your server and test it out!
 
 ### Bugs/requests
 Post an issue on this page.
