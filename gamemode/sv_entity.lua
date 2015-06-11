@@ -95,6 +95,8 @@ function GM:PlayerSpawnProp( ply, model )
         ModelData.LastSpawn = os.time()
     end
 
+    PK.SaveData = true -- save changes
+
 	return true
 end
 

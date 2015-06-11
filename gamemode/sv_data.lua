@@ -41,15 +41,17 @@ end
    Desc: Saves data every 5 minutes
 ---------------------------------------------------------*/
 timer.Create( "AutoSaveTimer", 300, 0, function()
-	GM:Msg( "Saving stats..." )
+	if not PK.SaveData then return end
+
+	GAMEMODE:Msg( "Saving stats..." )
 
 	file.Write( "propkill/sscores.txt", util.TableToJSON( PK.Scores ) )
-    GM:Msg( "Saved player stats..." )
+    GAMEMODE:Msg( "Saved player stats..." )
 
 	file.Write( "propkill/propspawns.txt", util.TableToJSON( PK.PropSpawns ) )
-	GM:Msg( "Saved prop spawns..." )
+	GAMEMODE:Msg( "Saved prop spawns..." )
 
-	GM:Msg( "Completed saving stats..." )
+	GAMEMODE:Msg( "Completed saving stats..." )
 end )
 
 /*---------------------------------------------------------

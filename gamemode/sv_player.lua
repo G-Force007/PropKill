@@ -467,6 +467,8 @@ function GM:DoPlayerDeath( ply, killer, dmginfo )
 	end
 
 	owner:CallAchievements( ply ) -- Call all the functions added to this rubbish list.
+
+	PK.SaveData = true -- save changes
 end
 
 /*---------------------------------------------------------
