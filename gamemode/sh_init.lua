@@ -8,8 +8,8 @@ PK.Version = "2.9a"
 
 DeriveGamemode( "sandbox" )
 
-GM.Name = "Propkill v" .. PK.Version
-GM.Author = "G-Force - Converted to Gmod 13 by Iced Coffee"
+GM.Name = "PropKill v" .. PK.Version
+GM.Author = "G-Force"
 
 /* Setting numbers to define what shit is :) */
 SETTING_NUMBER = 1
