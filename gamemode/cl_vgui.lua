@@ -20,11 +20,10 @@ local function ChangeJobVGUI()
 		if LocalPlayer():IsSuperAdmin() then
 			table.insert( F4Tabs, AdminMenu() )
 		end
-		F4Menu:SetSkin("DarkRP")
 	else
 		F4Menu:SetVisible( true )
-		F4Menu:SetSkin("DarkRP")
 	end
+
 	NoCloseF4 = CurTime() + 0.6
 	
 	function F4Menu:Think()
@@ -53,14 +52,11 @@ local function ChangeJobVGUI()
 		end
 	end
 
-	for _, panel in pairs( F4Tabs ) do panel:Update() panel:SetSkin("DarkRP") end
+	for _, panel in pairs( F4Tabs ) do panel:Update() end
 
  	function F4Menu:Close()
 		F4Menu:SetVisible(false)
-		F4Menu:SetSkin("DarkRP")
-	end 
-
-	F4Menu:SetSkin("DarkRP")
+	end
 end
 net.Receive("ChangeJobVGUI", ChangeJobVGUI)
 
@@ -80,7 +76,6 @@ function JobsTab()
 		Panel:SetSpacing(1)
 		Panel:EnableHorizontal( true )
 		Panel:EnableVerticalScrollbar( true )
-		Panel:SetSkin("DarkRP")
 		
 		local Info = {}
 		local model
@@ -95,7 +90,7 @@ function JobsTab()
 			Information:SetSpacing(10)
 			Information:EnableHorizontal( false )
 			Information:EnableVerticalScrollbar( true )
-			Information:SetSkin("DarkRP")
+
 			function Information:Rebuild() -- YES IM OVERRIDING IT AND CHANGING ONLY ONE LINE BUT I HAVE A FUCKING GOOD REASON TO DO IT!
 				local Offset = 0
 				if ( self.Horizontal ) then
@@ -192,7 +187,6 @@ function JobsTab()
 					frame:SetTitle( "Choose model" )
 					frame:SetVisible(true)
 					frame:MakePopup()
-					frame:SetSkin("DarkRP")
 					
 					local levels = 1
 					local IconsPerLevel = math.floor(ScrW()/64)

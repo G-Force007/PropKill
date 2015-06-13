@@ -46,6 +46,16 @@ RunConsoleCommand( "sbox_maxprops", 10 )
 RunConsoleCommand( "sbox_noclip", 0 )
 RunConsoleCommand( "sbox_godmode", 0 )
 
+RunConsoleCommand( "sv_airaccelerate", 1000 )
+
+-- Higher rates!
+RunConsoleCommand( "sv_mincmdrate", 33 )
+RunConsoleCommand( "sv_maxcmdrate", 100 )
+RunConsoleCommand( "sv_minupdaterate", 33 )
+RunConsoleCommand( "sv_maxupdaterate", 100 )
+RunConsoleCommand( "sv_minrate", 10000 )
+RunConsoleCommand( "sv_maxrate", 100000 )
+
 function GM:ShutDown()
 	self:Msg( "Saving stats..." )
 	file.Write( "propkill/sscores.txt", util.TableToJSON( PK.Scores ) )

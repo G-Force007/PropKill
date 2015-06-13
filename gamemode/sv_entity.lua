@@ -88,7 +88,7 @@ function GM:PlayerSpawnProp( ply, model )
 
 	-- Update the models spawned etc, for most spawned models :)
 	if not ModelData then
-		ModelData = {Spawns = 1, LastSpawn = os.time()}
+		ModelData = { Spawns = 1, LastSpawn = os.time() }
         PK.PropSpawns[ model ] = ModelData
     else
         ModelData.Spawns = ModelData.Spawns + 1
@@ -122,11 +122,13 @@ end
    Desc: Removes props/doors etc when the map is loaded because we do not need all this extra useless shit to lag the server.
 ---------------------------------------------------------*/
 function GM:InitPostEntity()
-	local physData = physenv.GetPerformanceSettings()
-	physData.MaxVelocity = 2000
-	physData.MaxAngularVelocity	= 3636
+	--[[local physData = physenv.GetPerformanceSettings()
+	if physData then
+		physData.MaxVelocity = physData.MaxVelocity * 0.6
+		physData.MaxAngularVelocity	= physData.MaxAngularVelocity * 0.6
 
-	physenv.SetPerformanceSettings(physData)
+		physenv.SetPerformanceSettings( physData )
+	end]]
 
 	if not PK or not GetSetting( "CleanupOnStart" ) then return end
 

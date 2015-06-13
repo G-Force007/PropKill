@@ -4,7 +4,7 @@
    Author: G-Force Connections (STEAM_0:1:19084184)
 ---------------------------------------------------------*/
 
-PK.Version = 2.9
+PK.Version = "2.9a"
 
 DeriveGamemode( "sandbox" )
 
@@ -42,5 +42,5 @@ TEAM_BLUE = AddTeam( "Blue Team", Color( 30, 144, 255, 255 ), {
 [[Blue Team vs Red Team.]], "blueteam" )
 
 function GM:Msg( message )
-  Msg( Format( "PKv%0.1f: %s\n", PK.Version, message ) )
+  Msg( Format( "PKv%s: %s\n", PK.Version, message ) )
 end

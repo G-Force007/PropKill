@@ -44,10 +44,10 @@ CreateClientConVar( "pk_playermodel", "", true, true )
 -- Higher rates!
 RunConsoleCommand( "cl_cmdrate", 100 )
 RunConsoleCommand( "cl_updaterate", 100 )
-RunConsoleCommand( "rate", 35000 )
+RunConsoleCommand( "rate", 100000 ) -- why so high? it reduces choke.
 
 -- Physgun wheel speed!
-RunConsoleCommand( "physgun_wheelspeed", 75 )
+--RunConsoleCommand( "physgun_wheelspeed", 75 )
 
 -- Falco's rotate :3
 concommand.Add( "falco_rotate1", function()

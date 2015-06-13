@@ -303,7 +303,7 @@ function GM:DrawPropOwner()
     if tr.HitNonWorld then
         if tr.Entity:IsValid() and not tr.Entity:IsPlayer() and not LocalPlayer():InVehicle() then
 			local owner = tr.Entity:GetGNWVar("owner")
-			local name = owner and owner:Nick() or "Disconnected Player"
+			local name = owner and IsValid( owner ) and owner:Nick() or "Disconnected Player"
 
         	if owner then
 	            local PropOwner = "Owner: " .. name

@@ -482,7 +482,7 @@ function GM:ShowHelp( ply ) return end
    Desc: Called when a player presses F4
 ---------------------------------------------------------*/
 util.AddNetworkString( "ChangeJobVGUI" )
-function GM:ShowSpare2( ply ) net.Start( "ChangeJobVGUI" ) net.Send(ply) end
+function GM:ShowSpare2( ply ) net.Start( "ChangeJobVGUI" ) net.Send( ply ) end
 
 /*---------------------------------------------------------
    Name: PlayerInitialSpawn
@@ -494,7 +494,7 @@ function GM:PlayerInitialSpawn( ply )
 	-- MUST ALWAYS SET TEAM OR YOU GO TO 1001 :D
 	ply:SetTeam( TEAM_SPECTATOR )
 
-	ulx.fancyLogAdmin( ply, "#A joined the server #s", "(" .. ply:SteamID() .. ")" )
+	ulx.fancyLogAdmin( ply, "#A joined the server (#s)", ply:SteamID() )
 
 	if not PK.Scores[ ply:SteamID() ] then
 		PK.Scores[ ply:SteamID() ] = {}
@@ -582,6 +582,7 @@ end
 function GM:PlayerSpawn( ply )
 	ply:CrosshairEnable()
 	ply:UnSpectate() -- We need this incase you are in spectator :)
+	ply:SetupHands()
 
 	ply:SetHealth( GetSetting( "PlayerSpawnHealth" ) or 100 )
 
@@ -634,7 +635,9 @@ function GM:PlayerSpawn( ply )
 		ply:SetPos( pos )
 		if angle then ply:SetEyeAngles( angle ) end
 	end
-	
+
+	ply:SetMaxSpeed( 10000 )
+	ply:SetJumpPower( GetSetting( "JumpPower" ) or 200 )
 	self:SetPlayerSpeed( ply, GetSetting( "WalkSpeed" ) or 400, GetSetting( "RunSpeed" ) or 500 )
 	self:PlayerSetModel( ply )
 end
@@ -683,6 +686,7 @@ function GM:PlayerSelectSpawn( ply )
 	local spawn = self.BaseClass:PlayerSelectSpawn( ply )
 
 	local POS
+	local ANGLE = Angle( 0, 90, 0 )
 	if spawn and spawn.GetPos then 
 		POS = spawn:GetPos()
 	else
@@ -702,7 +706,7 @@ function GM:PlayerSelectSpawn( ply )
 	local area = Vector( 16, 16, 64 )
 
 	if isEmpty( POS, ignore ) and isEmpty( POS + area, ignore ) then
-		return POS
+		return POS, ANGLE
 	end
 
 	for j = step, distance, step do
@@ -711,17 +715,17 @@ function GM:PlayerSelectSpawn( ply )
 
 			-- Look North/South
 			if isEmpty( POS + Vector( k, 0, 0 ), ignore ) and isEmpty( POS + Vector( k, 0, 0 ) + area, ignore ) then
-				return POS + Vector( k, 0, 0 )
+				return POS + Vector( k, 0, 0 ), ANGLE
 			end
 
 			-- Look East/West
 			if isEmpty( POS + Vector( 0, k, 0 ), ignore ) and isEmpty( POS + Vector( 0, k, 0 ) + area, ignore ) then
-				return POS + Vector( 0, k, 0 )
+				return POS + Vector( 0, k, 0 ), ANGLE
 			end
 
 			-- Look Up/Down
 			if isEmpty( POS + Vector( 0, 0, k ), ignore ) and isEmpty( POS + Vector( 0, 0, k ) + area, ignore ) then
-				return POS + Vector( 0, 0, k )
+				return POS + Vector( 0, 0, k ), ANGLE
 			end
 		end
 	end
@@ -734,7 +738,6 @@ end
    Desc: Called after PlayerSpawn to set the players model.
 ---------------------------------------------------------*/
 function GM:PlayerSetModel( ply )
-	print("Called for "..ply:Nick())
 	local EndModel = ""
 	local TEAM = Teams[ ply:Team() ]
 	
@@ -829,7 +832,7 @@ function GM:EntityTakeDamage( ent, dmginfo )
 				    net.WriteVector( IndicPos )
 				    net.WriteInt( dmginfo:GetDamage(), 32 )
 				    net.WriteInt( CurTime() + 3, 32 )
-				net.Send(owner)
+				net.Send( owner )
 			end
 		end
     end

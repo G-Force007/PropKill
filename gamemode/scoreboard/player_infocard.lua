@@ -61,6 +61,7 @@ end
 function PANEL:UpdatePlayerData()
 	if not self.Player then return end
 	if not self.Player:IsValid() then return end
+	if not self.Player.Achievements then return end
 	
 	self:SetInfo( 1, Format( "Lost leader %i time(s)", self.Player.Achievements.LostLeader or 0 ) )
 	self:SetInfo( 1, Format( "Killed %i leader(s)", self.Player.Achievements.LeaderKills or 0 ) )

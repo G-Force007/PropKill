@@ -23,6 +23,7 @@ end
    Desc: This saves settings to a file.
 ---------------------------------------------------------*/
 function WritePKSettings()
+	local GM = GM or GAMEMODE
     file.Write( "propkill/settings.txt", util.TableToJSON( PK.Settings ) )
     GM:Msg( "Saved settings." )
 end
@@ -32,6 +33,7 @@ end
    Desc: Saves custom spawns
 ---------------------------------------------------------*/
 function WritePKCustomSpawns()
+	local GM = GM or GAMEMODE
     file.Write( "propkill/customspawns.txt", util.TableToJSON( PK.CustomSpawns ) )
     GM:Msg( "Saved custom spawns." )
 end
@@ -42,6 +44,7 @@ end
 ---------------------------------------------------------*/
 timer.Create( "AutoSaveTimer", 300, 0, function()
 	if not PK.SaveData then return end
+	PK.SaveData = nil
 
 	GAMEMODE:Msg( "Saving stats..." )
 
@@ -61,6 +64,7 @@ end )
 PK.Scores = PK.Scores or {}
 
 if file.Exists( "propkill/sscores.txt", "DATA" ) then
+	local GM = GM or GAMEMODE
 	PK.Scores = util.JSONToTable( file.Read( "propkill/sscores.txt", "DATA" ) )
 	GM:Msg( "Successfully loaded " .. table.Count( PK.Scores ) .. " users." )
 end
@@ -88,6 +92,7 @@ PK.DefaultSettings[ "DefaultFrags" ] = { value = 15, min = 5, max = 15, type = S
 PK.DefaultSettings[ "PlayerSpawnHealth" ] = { value = 100, min = 1, max = 100, public = true, type = SETTING_NUMBER, desc = [[Spawn health of a player]] }
 PK.DefaultSettings[ "WalkSpeed" ] = { value = 300, min = 300, max = 500, type = SETTING_NUMBER, desc = [[Players walking speed, NO SHIFT]] }
 PK.DefaultSettings[ "RunSpeed" ] = { value = 500, min = 500, max = 700, type = SETTING_NUMBER, desc = [[Players running speed, WITH SHIFT]] }
+PK.DefaultSettings[ "JumpPower" ] = { value = 200, min = 100, max = 500, type = SETTING_NUMBER, desc = [[Players jumping power]]}
 PK.DefaultSettings[ "FightCoolDown" ] = { value = 300, min = 60, max = 600, type = SETTING_NUMBER, desc = [[Cool down before another player can fight]] }
 PK.DefaultSettings[ "GodPlayerAtSpawn" ] = { value = true, type = SETTING_BOOLEAN, desc = [[God a player at their spawn?]] }
 PK.DefaultSettings[ "GodPlayerAtSpawnTime" ] = { value = 1.2, min = 1, max = 10, type = SETTING_NUMBER, desc = [[How long should the player be goded when spawned?]] }
