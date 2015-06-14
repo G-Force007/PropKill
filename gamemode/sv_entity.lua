@@ -122,13 +122,13 @@ end
    Desc: Removes props/doors etc when the map is loaded because we do not need all this extra useless shit to lag the server.
 ---------------------------------------------------------*/
 function GM:InitPostEntity()
-	--[[local physData = physenv.GetPerformanceSettings()
+	local physData = physenv.GetPerformanceSettings()
 	if physData then
-		physData.MaxVelocity = physData.MaxVelocity * 0.6
-		physData.MaxAngularVelocity	= physData.MaxAngularVelocity * 0.6
+		physData.MaxVelocity = 2200
+		physData.MaxAngularVelocity	= 3636
 
 		physenv.SetPerformanceSettings( physData )
-	end]]
+	end
 
 	if not PK or not GetSetting( "CleanupOnStart" ) then return end
 

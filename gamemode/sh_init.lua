@@ -44,3 +44,8 @@ TEAM_BLUE = AddTeam( "Blue Team", Color( 30, 144, 255, 255 ), {
 function GM:Msg( message )
   Msg( Format( "PKv%s: %s\n", PK.Version, message ) )
 end
+
+-- Bunny hop preventing functions
+function GM:Move() end
+function GM:SetupMove() end
+function GM:FinishMove() end

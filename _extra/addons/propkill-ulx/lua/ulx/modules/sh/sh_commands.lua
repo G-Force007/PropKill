@@ -1,9 +1,9 @@
 /*---------------------------------------------------------
    Name: ULX Shit
-   Desc: Commands and shit, thatll soon be changed due to stuff going in F4 menu.
+   Desc: Commands and shit, that'll soon be changed due to stuff going in F4 menu.
 ---------------------------------------------------------*/
 
-local CATEGORY_NAME = "Utility"
+local CATEGORY_NAME = "Propkill"
 
 ------------------------------ Cleanup ------------------------------
 function ulx.cleanup( calling_ply )
@@ -137,21 +137,17 @@ stopfight:help( "Stop the fight" )
 ------------------------------ Add Custom Spawn ------------------------------
 function ulx.addcustomspawn( calling_ply, team )
     if string.lower( team ) == "spectator" then calling_ply:Notify( "You can't set Spectator's spawn point." ) end
-
     for k, v in pairs( Teams ) do
         if v.command == string.lower( team ) then
             if not PK.CustomSpawns[ game.GetMap() ] then PK.CustomSpawns[ game.GetMap() ] = {} end
             if not PK.CustomSpawns[ game.GetMap() ][ v.command  ] then PK.CustomSpawns[ game.GetMap() ][ v.command  ] = {} end
-
             local TABLE = {}
             TABLE[ "Pos" ] = calling_ply:GetPos()
             TABLE[ "Angle" ] = calling_ply:EyeAngles()
             table.insert( PK.CustomSpawns[ game.GetMap() ][ v.command ], TABLE )
-
             calling_ply:Notify( "Successfully added team spawn for " .. v.command .. " at your location." )
 
             WritePKCustomSpawns()
-
             return
         end
     end
@@ -165,7 +161,6 @@ addcustomspawn:help( "Add a custom spawn for the map you're currently on" )
 ------------------------------ Reset Custom Spawns ------------------------------
 function ulx.resetcustomspawns( calling_ply, team )
     if string.lower( team ) == "spectator" then calling_ply( "You can't reset Spectator's spawn point." ) end
-
     for k, v in pairs( Teams ) do
         if v.command == string.lower( team )then
             PK.CustomSpawns[ game.GetMap() ][ v.command  ] = nil
@@ -181,3 +176,19 @@ local resetcustomspawns = ulx.command( CATEGORY_NAME, "ulx resetcustomspawns", u
 resetcustomspawns:addParam{ type=ULib.cmds.StringArg, hint="team", ULib.cmds.takeRestOfLine }
 resetcustomspawns:defaultAccess( ULib.ACCESS_ALL )
 resetcustomspawns:help( "Reset all custom spawns on the map you're currently on" )
+
+------------------------------ Phys env ------------------------------
+function ulx.physenv( calling_ply, maxvelocity, maxangularvelocity )
+    local physData = physenv.GetPerformanceSettings();
+    physData.MaxVelocity = tonumber(maxvelocity) or 2200
+    physData.MaxAngularVelocity = tonumber(maxangularvelocity) or 3636
+
+    physenv.SetPerformanceSettings( physData );
+
+    ulx.fancyLogAdmin( calling_ply, "#A modified velocity: (#s, #s)", maxvelocity, maxangularvelocity )
+end
+local physenv = ulx.command( CATEGORY_NAME, "ulx physenv", ulx.physenv, "!physenv" )
+physenv:addParam{ type=ULib.cmds.StringArg, hint="MaxVelocity" }
+physenv:addParam{ type=ULib.cmds.StringArg, hint="MaxAngularVelocity" }
+physenv:defaultAccess( ULib.ACCESS_ALL )
+physenv:help( "Physenv" )

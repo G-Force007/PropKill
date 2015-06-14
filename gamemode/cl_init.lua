@@ -56,10 +56,11 @@ concommand.Add( "falco_rotate1", function()
 end )
 
 concommand.Add( "falco_rotate2", function()
-	local a = LocalPlayer():EyeAngles()
-	LocalPlayer():SetEyeAngles( Angle( a.p - a.p - a.p, a.y - 180, a.r ) )
 	RunConsoleCommand( "+jump" )
 	timer.Simple( 0.2, function() RunConsoleCommand("-jump") end )
+
+	local a = LocalPlayer():EyeAngles()
+	LocalPlayer():SetEyeAngles( Angle( a.p - a.p - a.p, a.y - 180, a.r ) )
 end )
 
 -- Remove propspawn effects
