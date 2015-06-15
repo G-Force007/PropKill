@@ -25,14 +25,25 @@ A PropKill gamemode created for Garry's Mod
 2. Rename *PropKill-master* to *propkill*
 3. Add gamemode "propkill" to your autoexec.cfg
 4. Ensure you have ULib & ULX installed
-	Found here:
-		https://github.com/Nayruden/Ulysses/ulib
-		https://github.com/Nayruden/Ulysses/ulx
-5. Join your server and test it out!
 
-### Bugs/requests
-Post an issue on this page.
+  ULib: https://github.com/Nayruden/Ulysses/ulib
+
+  ULX: https://github.com/Nayruden/Ulysses/ulx
+5. Copy *addons* folder from the *_extras* folder into your main Garry's Mod directory
+6. Join your server and test it out!
 
 ### Credits (in no particular order):
-- G-Force for Creating the gamemode
-- Iced Coffee for porting the gamemode originally to GM13
+* G-Force for Creating the gamemode
+* Iced Coffee for porting the gamemode originally to GM13
+
+### Known PropKill servers
+#### Australia
+* GGS.SX - Aus PropKill (ggs.sx:27020)
+* Monumental Gaming | Propkill/HvH/Deathmatch (119.252.191.90:27020)
+
+#### Europe
+* David's EU Prop Kill (178.32.57.83:27018)
+* [CE] Propkill (37.120.160.136:27017)
+
+#### USA
+* Gage's US Prop Kill | RPers Welcome | Now giving lessons! | (74.91.124.70:27016)

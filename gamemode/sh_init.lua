@@ -8,7 +8,7 @@ PK.Version = "2.9a"
 
 DeriveGamemode( "sandbox" )
 
-GM.Name = "PropKill v" .. PK.Version
+GM.Name = "PropKill"
 GM.Author = "G-Force"
 
 /* Setting numbers to define what shit is :) */

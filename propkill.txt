@@ -1,6 +1,6 @@
 "PropKill"
 {
-    "name"  "Propkill by G-Force"
+    "name"  "PropKill by G-Force"
     "version"   "2"
 
     "author_name"   "G-Force"
