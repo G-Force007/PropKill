@@ -178,9 +178,7 @@ function PANEL:PerformLayout()
 		self.PlayerFrame:GetCanvas():SetSize( self.PlayerFrame:GetCanvas():GetWide(), y + v:GetTall() )		
 		y = y + v:GetTall() + 1	
 	end
-	
-	self.Hostname:SetText( GetGlobalString( "ServerName","Garry's Mod 13" ) )
-	
+
 	self.lblPing:SizeToContents()
 	self.lblKills:SizeToContents()
 	self.lblRatio:SizeToContents()

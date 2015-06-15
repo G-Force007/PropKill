@@ -317,7 +317,7 @@ function FightMenu()
 			end
 		end
 
-		if not count then
+		if count == 0 then
 			List:SetDisabled( true )
 			List:SetText( "No players available" )
 		end
