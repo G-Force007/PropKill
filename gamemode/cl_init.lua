@@ -41,10 +41,11 @@ include( "cl_vgui.lua" )
 
 CreateClientConVar( "pk_playermodel", "", true, true )
 
--- Higher rates!
+-- Higher rates! -- even higher rates so we can turn the interpolation down so the physgun feels snappier
 RunConsoleCommand( "cl_cmdrate", 100 )
-RunConsoleCommand( "cl_updaterate", 100 )
-RunConsoleCommand( "rate", 100000 ) -- why so high? it reduces choke.
+RunConsoleCommand( "cl_updaterate", 2000 )
+RunConsoleCommand( "rate", 1048576 )
+RunConsoleCommand( "cl_interp", 0 )
 
 -- Physgun wheel speed!
 --RunConsoleCommand( "physgun_wheelspeed", 75 )
