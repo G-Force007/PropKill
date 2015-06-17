@@ -360,6 +360,8 @@ function GM:DrawKDBar()
 	if fighting then
 		local fighter1 = GetGlobalEntity( "Fighter1" )
 		local fighter2 = GetGlobalEntity( "Fighter2" )
+		if not IsValid( fighter1 ) or not IsValid( fighter2 ) then return end
+
 		draw.SimpleText( "Fighter1: " .. fighter1:Nick() .. " (" .. fighter2:Deaths() .. ")", "UiBold", 48, ScrH() - 47, WHITECOLOUR, 0, 1)
 		draw.SimpleText( "Fighter2: " .. fighter2:Nick() .. " (" .. fighter1:Deaths() .. ")", "UiBold", 48, ScrH() - 35, WHITECOLOUR, 0, 1)
 	else
