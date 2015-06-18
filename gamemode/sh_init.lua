@@ -4,7 +4,7 @@
    Author: G-Force Connections (STEAM_0:1:19084184)
 ---------------------------------------------------------*/
 
-PK.Version = "2.9a"
+PK.Version = "2.9b"
 
 DeriveGamemode( "sandbox" )
 
@@ -31,21 +31,28 @@ TEAM_RED = AddTeam( "Red Team", Color( 255, 0, 0, 255 ), {
     "models/player/arctic.mdl",
     "models/player/phoenix.mdl",
     "models/player/guerilla.mdl",
-    "models/player/leet.mdl"},
+    "models/player/leet.mdl" },
 [[Red Team vs Blue Team.]], "redteam" )
 
 TEAM_BLUE = AddTeam( "Blue Team", Color( 30, 144, 255, 255 ), {
     "models/player/urban.mdl",
     "models/player/swat.mdl",
     "models/player/gasmask.mdl",
-    "models/player/riot.mdl"},
+    "models/player/riot.mdl" },
 [[Blue Team vs Red Team.]], "blueteam" )
 
 function GM:Msg( message )
-  Msg( Format( "PKv%s: %s\n", PK.Version, message ) )
+    Msg( Format( "PKv%s: %s\n", PK.Version, message ) )
 end
 
 -- Bunny hop preventing functions
 function GM:Move() end
 function GM:SetupMove() end
 function GM:FinishMove() end
+
+-- kill the footsteps when you join spectator, so fucking annoying...
+function GM:PlayerFootstep( ply, pos, foot, sound, volume, filter )
+    if ply:Team() == TEAM_SPECTATOR or not ply:Alive() then return true end -- no footsteps
+
+    self.BaseClass:PlayerFootstep( ply, pos, foot, sound, volume, filter )
+end

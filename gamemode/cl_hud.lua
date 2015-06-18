@@ -353,19 +353,19 @@ function GM:DrawKDBar()
 	self.HealthBar:SetText("UiBold", "Total KD Ratio " .. math.Round( SKills / SDeaths, 2 ) .. ":1", clrDrakGray)
 	jdraw.DrawProgressBar(self.HealthBar)
 
-	local fighting = GetGlobalBool( "FightInProgress" )
+	local fighting = GetGNWVar( "FightInProgress", false )
 
 	local WHITECOLOUR = Color( PK.HudSettings[ "text_r" ]:GetInt(), PK.HudSettings[ "text_g" ]:GetInt(), PK.HudSettings[ "text_b" ]:GetInt(), PK.HudSettings[ "text_a" ]:GetInt() )
 
 	if fighting then
-		local fighter1 = GetGlobalEntity( "Fighter1" )
-		local fighter2 = GetGlobalEntity( "Fighter2" )
+		local fighter1 = GetGNWVar( "Fighter1" )
+		local fighter2 = GetGNWVar( "Fighter2" )
 		if not IsValid( fighter1 ) or not IsValid( fighter2 ) then return end
 
 		draw.SimpleText( "Fighter1: " .. fighter1:Nick() .. " (" .. fighter2:Deaths() .. ")", "UiBold", 48, ScrH() - 47, WHITECOLOUR, 0, 1)
 		draw.SimpleText( "Fighter2: " .. fighter2:Nick() .. " (" .. fighter1:Deaths() .. ")", "UiBold", 48, ScrH() - 35, WHITECOLOUR, 0, 1)
 	else
-		local winning = GetGlobalEntity( "Leader" )
+		local winning = GetGNWVar( "Leader" )
 		local leading = "No one"
 		if winning and winning ~= NULL and winning ~= nil then
 			if winning:IsPlayer() and winning:IsValid() then

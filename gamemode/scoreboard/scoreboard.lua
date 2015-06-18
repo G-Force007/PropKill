@@ -19,11 +19,11 @@ Version 2.6.2 - 12-06-2014 05:33 PM(UTC -03:00)
 include( "player_row.lua" )
 include( "player_frame.lua" )
 
-surface.CreateFont( "suiscoreboardheader"  , { font = "coolvetica", size = 28, weight = 100, antialiasing = true})
-surface.CreateFont( "suiscoreboardsubtitle", { font = "coolvetica", size = 20, weight = 100, antialiasing = true})
-surface.CreateFont( "suiscoreboardlogotext", { font = "coolvetica", size = 75, weight = 100, antialiasing = true})
-surface.CreateFont( "suiscoreboardsuisctext", { font = "verdana", size = 12, weight = 100, antialiasing = true})
-surface.CreateFont( "suiscoreboardplayername", { font = "verdana", size = 16, weight = 5, antialiasing = true})
+surface.CreateFont( "suiscoreboardheader"  , { font = "coolvetica", size = 28, weight = 100, antialiasing = true } )
+surface.CreateFont( "suiscoreboardsubtitle", { font = "coolvetica", size = 20, weight = 100, antialiasing = true } )
+surface.CreateFont( "suiscoreboardlogotext", { font = "coolvetica", size = 75, weight = 100, antialiasing = true } )
+surface.CreateFont( "suiscoreboardsuisctext", { font = "verdana", size = 12, weight = 100, antialiasing = true } )
+surface.CreateFont( "suiscoreboardplayername", { font = "verdana", size = 16, weight = 5, antialiasing = true } )
 
 local texGradient = surface.GetTextureID( "gui/center_gradient" )
 
@@ -39,7 +39,7 @@ local PANEL = {}
 
 --- Init
 function PANEL:Init()
-  Scoreboard.vgui = self
+	Scoreboard.vgui = self
 	self.Hostname = vgui.Create( "DLabel", self )
 	self.Hostname:SetText( GetHostName() )
 
@@ -50,16 +50,11 @@ function PANEL:Init()
 	self.SuiSc:SetText( "SUI Scoreboard v2.6 by .Z. Nexus" )
 	
 	self.Description = vgui.Create( "DLabel", self )
-	self.Description:SetText( GAMEMODE.Name .. " - " .. GAMEMODE.Author )
+	self.Description:SetText( Format( "%s v%s - Created by %s", GAMEMODE.Name, PK.Version, GAMEMODE.Author ) )
 	
 	self.PlayerFrame = vgui.Create( "suiplayerframe", self )
 	
 	self.PlayerRows = {}
-
-	self:UpdateScoreboard()
-	
-	-- Update the scoreboard every 1 second
-	timer.Create( "Scoreboard.vguiUpdater", 1, 0, self.UpdateScoreboard )
 	
 	self.lblPing = vgui.Create( "DLabel", self )
 	self.lblPing:SetText( "Ping" )
@@ -87,6 +82,14 @@ function PANEL:AddPlayerRow( ply )
 	local button = vgui.Create( "suiscoreplayerrow", self.PlayerFrame:GetCanvas() )
 	button:SetPlayer( ply )
 	self.PlayerRows[ ply ] = button
+
+	for k, v in pairs( self.PlayerRows ) do
+		v:PerformLayout()
+		v:InvalidateLayout()
+	end
+
+	self:PerformLayout()
+	self:InvalidateLayout()
 end
 
 --- GetPlayerRow
@@ -147,12 +150,12 @@ function PANEL:PerformLayout()
 	self.Hostname:SizeToContents()
 	self.Hostname:SetPos( 115, 17 )
 	
-  self.Logog:SetSize( 80, 80 )
-  self.Logog:SetPos( 45, 5 )
-  self.Logog:SetColor( Color(30, 30, 30, 255) )
+	self.Logog:SetSize( 80, 80 )
+	self.Logog:SetPos( 45, 5 )
+	self.Logog:SetColor( Color(30, 30, 30, 255) )
 
-  self.SuiSc:SetSize( 200, 15 )
-  self.SuiSc:SetPos( (self:GetWide() - 200), (self:GetTall() - 15) )  
+	self.SuiSc:SetSize( 200, 15 )
+	self.SuiSc:SetPos( (self:GetWide() - 200), (self:GetTall() - 15) )
 	
 	self.Description:SizeToContents()
 	self.Description:SetPos( 115, 60 )
@@ -165,11 +168,12 @@ function PANEL:PerformLayout()
 	
 	local PlayerSorted = {}
 	
-	for k, v in pairs( self.PlayerRows ) do	
+	for k, v in pairs( self.PlayerRows ) do
+		if not IsValid( k ) then v:Remove() continue end
 		table.insert( PlayerSorted, v )		
 	end
 	
-	table.sort( PlayerSorted, function ( a , b) return a:HigherOrLower( b ) end )
+	table.sort( PlayerSorted, function( a, b ) return a:HigherOrLower( b ) end )
 	
 	for k, v in ipairs( PlayerSorted ) do	
 		v:SetPos( 0, y )	
@@ -203,11 +207,11 @@ function PANEL:ApplySchemeSettings()
 	self.Logog:SetFont( "suiscoreboardlogotext" )
 	self.SuiSc:SetFont( "suiscoreboardsuisctext" )
 	
-  if evolve == nil then
-    tColor = team.GetColor(LocalPlayer():Team())      
-  else
-    tColor = evolve.ranks[ LocalPlayer():EV_GetRank() ].Color
-  end
+	if evolve == nil then
+		tColor = team.GetColor(LocalPlayer():Team())      
+	else
+		tColor = evolve.ranks[ LocalPlayer():EV_GetRank() ].Color
+	end
 	
 	self.Hostname:SetFGColor( Color( tColor.r, tColor.g, tColor.b, 255 ) )
 	self.Description:SetFGColor( Color( 55, 55, 55, 255 ) )
@@ -238,28 +242,18 @@ function PANEL:ApplySchemeSettings()
 end
 
 --- UpdateScoreboard
-function PANEL:UpdateScoreboard( force )
-	if self then 
-		if not force and not self:IsVisible() then 
-			return false
-		end
-	
-		for k, v in pairs( self.PlayerRows ) do	
-			if not k:IsValid() then		
-				v:Remove()
-				self.PlayerRows[ k ] = nil			
-			end	
-		end
-		
-		local PlayerList = player.GetAll()	
-		for id, pl in pairs( PlayerList ) do		
-			if not self:GetPlayerRow( pl ) then		
-				self:AddPlayerRow( pl )		
-			end		
-		end
-		
-		-- Always invalidate the layout so the order gets updated
-		self:InvalidateLayout()
+function PANEL:Think()
+	self.Hostname:SetText( GetHostName() )
+	self.Hostname:SizeToContents()
+
+	local PlayerList = player.GetAll()	
+	for id, pl in pairs( PlayerList ) do
+		if not self:GetPlayerRow( pl ) then	
+			self:AddPlayerRow( pl )	
+
+			-- Always invalidate the layout so the order gets updated
+			self:InvalidateLayout()	
+		end		
 	end
 end
 

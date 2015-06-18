@@ -1,12 +1,12 @@
 -- Author: G-Force Connections (STEAM_0:1:19084184)
 
-local Player = FindMetaTable( "Player" )
+local PLAYER = FindMetaTable( "Player" )
 
 /*---------------------------------------------------------
    Name: ChangeTeam
    Desc: Called when a player changes Team, alert others do killstreak shit etc.
 ---------------------------------------------------------*/
-function Player:ChangeTeam( t )
+function PLAYER:ChangeTeam( t )
 	if PK.FightInProgress then return end
 	if self:Team() == t then return end
 	
@@ -40,13 +40,15 @@ end
    Name: Cleanup
    Desc: Removes the players props.
 ---------------------------------------------------------*/
-function Player:Cleanup()
-	if !self or !self:IsPlayer() then return end
+function PLAYER:Cleanup( deaths )
+	if not self or not self:IsPlayer() then return end
+
+	deaths = deaths or self:Deaths()
 
 	local dissolver = ents.Create( "env_entity_dissolver" )
     dissolver:SetKeyValue( "dissolvetype", 3 )
     dissolver:SetKeyValue( "magnitude", 1 )
-    dissolver:SetKeyValue( "target", "prop_physics_" .. self:UniqueID() ) -- nurf nurf, must have this ;3
+    dissolver:SetKeyValue( "target", "prop_physics_" .. self:UniqueID() .. deaths ) -- nurf nurf, must have this ;3
     dissolver:Spawn()
     dissolver:Fire( "Dissolve", v, 0 )
     dissolver:Fire( "Kill", "", 0.1 )
@@ -56,7 +58,7 @@ end
    Name: Notify
    Desc: Send a sandbox notify to the player ;3
 ---------------------------------------------------------*/
-function Player:Notify( msg )
+function PLAYER:Notify( msg )
 	net.Start( "Notify" )
 		net.WriteString( msg )
 	net.Send( self )
@@ -66,7 +68,7 @@ end
    Name: AddSKills
    Desc: Save kills / Send updated kills to players.
 ---------------------------------------------------------*/
-function Player:AddSKills( kills )
+function PLAYER:AddSKills( kills )
 	self:AddToScores( "Kills", self:GetScores( "Kills" ) + kills )
 	self:SetGNWVar( "kills", self:GetScores( "Kills" ) )
 end
@@ -75,7 +77,7 @@ end
    Name: AddSDeaths
    Desc: Send deaths / Send updated deaths to players.
 ---------------------------------------------------------*/
-function Player:AddSDeaths( deaths )
+function PLAYER:AddSDeaths( deaths )
 	self:AddToScores( "Deaths", self:GetScores( "Deaths" ) + deaths )
 	self:SetGNWVar( "deaths", self:GetScores( "Deaths" ) )
 end
@@ -84,7 +86,7 @@ end
    Name: SetSKills
    Desc: Set the players kills.
 ---------------------------------------------------------*/
-function Player:SetSKills( kills )
+function PLAYER:SetSKills( kills )
 	self:AddToScores( "Kills", kills )
 	self:SetGNWVar( "kills", kills )
 end
@@ -93,7 +95,7 @@ end
    Name: SetSDeaths
    Desc: Set the players deaths.
 ---------------------------------------------------------*/
-function Player:SetSDeaths( deaths )
+function PLAYER:SetSDeaths( deaths )
 	self:AddToScores( "Deaths", deaths )
 	self:SetGNWVar( "deaths", deaths )
 end
@@ -102,7 +104,7 @@ end
    Name: SendNotify
    Desc: Send the custom message shit above the hud.
 ---------------------------------------------------------*/
-function Player:SendNotify( text, colour )
+function PLAYER:SendNotify( text, colour )
     if self:IsBot() then return end
     net.Start( "SendNotify" )
         net.WriteString( text )
@@ -114,14 +116,14 @@ end
    Name: Kill
    Desc: Overwriting the old function so we can kill the player silently.
 ---------------------------------------------------------*/
-function Player:Kill()
+function PLAYER:Kill()
 	self:SetGNWVar( "killstreak", 0 )
     self:KillSilent()
     PK.Achievements:KillStreaks( self, self )
 
     -- Clean up props for player.
     if PK.Cleanup then
-    	timer.Simple( PK.CleanupTime or 2, self.Cleanup, self )
+    	timer.Simple( GetSetting( "CleanupTime" ) or 2, self.Cleanup, self )
     end
 end
 
@@ -129,11 +131,11 @@ end
    Name: AddFrags
    Desc: We overwrite this so we can add Saved Kills too.
 ---------------------------------------------------------*/
-if not Player.AddFragsOld then
-	Player.AddFragsOld = Player.AddFragsOld or Player.AddFrags
+if not PLAYER.AddFragsOld then
+	PLAYER.AddFragsOld = PLAYER.AddFragsOld or PLAYER.AddFrags
 end
 
-function Player:AddFrags( kills )
+function PLAYER:AddFrags( kills )
 	self:AddFragsOld( kills )
 	self:AddSKills( kills )
 end
@@ -142,11 +144,11 @@ end
    Name: AddDeaths
    Desc: We overwrite this so we can add Saved Deaths too.
 ---------------------------------------------------------*/
-if not Player.AddDeathsOld then
-	Player.AddDeathsOld = Player.AddDeathsOld or Player.AddDeaths
+if not PLAYER.AddDeathsOld then
+	PLAYER.AddDeathsOld = PLAYER.AddDeathsOld or PLAYER.AddDeaths
 end
 
-function Player:AddDeaths( deaths )
+function PLAYER:AddDeaths( deaths )
 	self:AddDeathsOld( deaths )
 	self:AddSDeaths( deaths )
 end
@@ -155,7 +157,7 @@ end
    Name: AddToScores
    Desc: Save Kills/Deaths with this function.
 ---------------------------------------------------------*/
-function Player:AddToScores( key, value )
+function PLAYER:AddToScores( key, value )
 	PK.Scores[ self:SteamID() ][ key ] = value
 end
 
@@ -163,7 +165,7 @@ end
    Name: GetScores
    Desc: Gets Kills/Deaths with this function.
 ---------------------------------------------------------*/
-function Player:GetScores( key )
+function PLAYER:GetScores( key )
 	return PK.Scores[ self:SteamID() ][ key ] or 0
 end
 
@@ -171,7 +173,7 @@ end
    Name: SetAchievement
    Desc: Set achievements with this function.
 ---------------------------------------------------------*/
-function Player:SetAchievement( key, value, dontinform )
+function PLAYER:SetAchievement( key, value, dontinform )
 	if self:GetScores( "Achievements" ) == 0 then self:AddToScores( "Achievements", {} ) end
 	PK.Scores[ self:SteamID() ].Achievements[ key ] = value
 
@@ -188,7 +190,7 @@ end
    Name: GetAchievement
    Desc: Get achievements with this function.
 ---------------------------------------------------------*/
-function Player:GetAchievement( key )
+function PLAYER:GetAchievement( key )
 	if self:GetScores( "Achievements" ) == 0 then self:AddToScores( "Achievements", {} ) end
 
 	return PK.Scores[ self:SteamID() ].Achievements[ key ] or 0
@@ -198,7 +200,7 @@ end
    Name: GetAchievements
    Desc: Get all the achievements from the player with this function.
 ---------------------------------------------------------*/
-function Player:GetAchievements()
+function PLAYER:GetAchievements()
 	return PK.Scores[ self:SteamID() ].Achievements or {}
 end
 
@@ -206,7 +208,7 @@ end
    Name: CallAchievements
    Desc: This calls all the achievements for the player and victim.
 ---------------------------------------------------------*/
-function Player:CallAchievements( victim )
+function PLAYER:CallAchievements( victim )
 	for _, v in pairs( PK.Achievements ) do
 		v( self, victim )
 	end
@@ -216,7 +218,7 @@ end
    Name: PlayerKilledSelf
    Desc: Send the PlayerKilledSelf usermessage to the players.
 ---------------------------------------------------------*/
-function Player:PlayerKilledSelf()
+function PLAYER:PlayerKilledSelf()
 	net.Start( "PlayerKilledSelf" )
 		net.WriteEntity( self )
 	net.Broadcast()
@@ -226,7 +228,7 @@ end
    Name: PlayerKilledByPlayer
    Desc: Send the PlayerKilledByPlayer usermessage to the players.
 ---------------------------------------------------------*/
-function Player:PlayerKilledByPlayer( killer )
+function PLAYER:PlayerKilledByPlayer( killer )
 	net.Start( "PlayerKilledByPlayer" )
 		net.WriteEntity( self )
 		net.WriteString( "prop_physics" )
@@ -238,7 +240,7 @@ end
    Name: FindClosestOwner
    Desc: Gets the closest props owner.
 ---------------------------------------------------------*/
-function Player:FindClosestOwner()
+function PLAYER:FindClosestOwner()
 	local entities = ents.FindInSphere( self:GetPos(), 200 )
 	local entities2 = {}
 	for _, v in pairs( entities ) do
@@ -255,7 +257,7 @@ end
    Name: StartFight
    Desc: Starts a fight with another player.
 ---------------------------------------------------------*/
-function Player:StartFight( ply, limit )
+function PLAYER:StartFight( ply, limit )
 	if not self:IsPlayer() then return end
 	if PK.FightInProgress then return end
 	
@@ -300,10 +302,10 @@ function Player:StartFight( ply, limit )
 			v:KillSilent()
 		end
 	end
-	SetGlobalBool( "FightInProgress", true )
-	SetGlobalString( "Fighters", util.TableToJSON( PK.Fighters ) )
-	SetGlobalEntity( "Fighter1", PK.Fighter1 )
-	SetGlobalEntity( "Fighter2", PK.Fighter2 )
+
+	SetGNWVar( "FightInProgress", true )
+	SetGNWVar( "Fighter1", PK.Fighter1 )
+	SetGNWVar( "Fighter2", PK.Fighter2 )
 	CommandLog( Format( "%s<%s> started a battle with %s<%s>", ply:Nick(), ply:SteamID(), self:Nick(), self:SteamID() ) )
 	
 	if ulx then ulx.fancyLogAdmin( ply, "#A started a battle with #T", self ) end
@@ -313,7 +315,7 @@ end
    Name: FinishFighting
    Desc: Finish fighting with a player or ending it.
 ---------------------------------------------------------*/
-function Player:FinishFighting()
+function PLAYER:FinishFighting()
 	if not PK.FightInProgress then return end
 	if not self:IsPlayer() or not self.Fighting:IsPlayer() then return end
 
@@ -346,10 +348,9 @@ function Player:FinishFighting()
 	self:SetFrags( 0 )
 	self:SetDeaths( 0 )
 
-	SetGlobalBool( "FightInProgress", false )
-	SetGlobalString( "Fighters", "" )
-	SetGlobalEntity( "Figher1", nil )
-	SetGlobalEntity( "Figher2", nil )
+	SetGNWVar( "FightInProgress", false )
+	SetGNWVar( "Figher1", nil )
+	SetGNWVar( "Figher2", nil )
 
 	CommandLog( Format( "%s<%s> finished a battle with %s<%s>", ply:Nick(), ply:SteamID(), self:Nick(), self:SteamID() ) )
 
@@ -360,7 +361,7 @@ end
    Name: ResetViewRoll
    Desc: some TTT shit for the spectator?
 ---------------------------------------------------------*/
-function Player:ResetViewRoll()
+function PLAYER:ResetViewRoll()
 	local ang = self:EyeAngles()
 
 	if ang.r ~= 0 then
@@ -446,12 +447,18 @@ function GM:DoPlayerDeath( ply, killer, dmginfo )
 	--give the owner of the prop a frag
 	if owner and owner ~= ply and owner:IsPlayer() then owner:AddFrags( 1 ) end
 
+	if GetSetting( "Cleanup" ) then
+		local deaths = ply:Deaths()
+
+		timer.Simple( GetSetting( "CleanupTime" ) or 2, function()
+			if not ply or not ply:IsPlayer() then return end
+
+			ply:Cleanup( deaths )
+		end )
+	end
+
 	ply:AddDeaths( 1 )
 	ply:SetGNWVar( "killstreak", 0 ) -- Resetting the players killstreak
-
-	if GetSetting( "Cleanup" ) then
-		timer.Create( string.format( "Cleanup_%s", ply:SteamID() ), GetSetting( "CleanupTime" ) or 2, 1, function() ply:Cleanup() end )
-	end
 	
 	if ply ~= owner and not PK.FightInProgress then owner:SetGNWVar( "killstreak", owner:GetGNWVar( "killstreak" ) + 1 ) end -- Up the players killstreak
 
@@ -494,7 +501,7 @@ function GM:PlayerInitialSpawn( ply )
 	-- MUST ALWAYS SET TEAM OR YOU GO TO 1001 :D
 	ply:SetTeam( TEAM_SPECTATOR )
 
-	ulx.fancyLogAdmin( ply, "#A joined the server (#s)", ply:SteamID() )
+	ulx.fancyLogAdmin( ply, "#A has joined the game (#s)", ply:SteamID() )
 
 	if not PK.Scores[ ply:SteamID() ] then
 		PK.Scores[ ply:SteamID() ] = {}
@@ -565,6 +572,11 @@ function GM:PlayerInitialSpawn( ply )
 			net.Broadcast()
 		end
 	end, ply )
+
+	-- custom spawns
+	local pos, angle = self:PlayerSelectSpawn( ply )
+	ply:SetPos( pos )
+	if angle then ply:SetEyeAngles( angle ) end
 end
 
 /*---------------------------------------------------------
@@ -592,6 +604,10 @@ function GM:PlayerSpawn( ply )
 	local col = ply:GetInfo( "cl_weaponcolor" )
 	ply:SetWeaponColor( Vector( col ) )
 
+	if GetSetting( "NocolidePlayers" ) then
+		ply:SetCollisionGroup( COLLISION_GROUP_WEAPON )
+	end
+
 	ply.Dying = false
 
 	if ply:Team() == TEAM_SPECTATOR then
@@ -604,7 +620,7 @@ function GM:PlayerSpawn( ply )
 		ply:SetMoveType( MOVETYPE_NOCLIP )
 		ply:Spectate( OBS_MODE_ROAMING )
 	else
-		ply:SetGNWVar( "IsSpectating", false )
+		ply:SetGNWVar( "IsSpectating", nil )
 		ply:SetColor( Color( 255, 255, 255, 255 ) )
 		if GetSetting( "GodPlayerAtSpawn" ) then
 			ply:GodEnable()
@@ -620,7 +636,7 @@ function GM:PlayerSpawn( ply )
 				ply.SpawnGoded = nil
 			end
 
-			timer.Create( string.format( "Ungod_%s", ply:SteamID() ), GetSetting( "GodPlayerAtSpawnTime" ) or 5, 1, function() UngodPlayer(ply) end )
+			timer.Simple( GetSetting( "GodPlayerAtSpawnTime" ) or 5, UngodPlayer, ply )
 		else
 			if ply.ULXHasGod then
 				ply:GodDisable()
@@ -666,16 +682,6 @@ function isEmpty( vector, ignore )
     end
 
     return a and b
-end
-
-/*---------------------------------------------------------
-   Name: ShouldCollide
-   Desc: Nocolide with players ;3
----------------------------------------------------------*/
-function GM:ShouldCollide( ent1, ent2 )
-	if ent1:IsPlayer() and ent2:IsPlayer() and GetSetting( "NocolidePlayers" ) then return false end
-
-	return true -- don't let props fall through worldspawn :P
 end
 
 /*---------------------------------------------------------
@@ -769,6 +775,8 @@ end
    Desc: Called when a player leaves.
 ---------------------------------------------------------*/
 function GM:PlayerDisconnected( ply )
+	self.BaseClass:PlayerDisconnected( ply )
+
 	if PK.FightInProgress then
 		if table.HasValue( PK.Fighters, ply ) then
 			ply:FinishFighting( ply.Fighting )
@@ -778,16 +786,14 @@ function GM:PlayerDisconnected( ply )
 
 	if PK.Leading == ply then
 		PK.Leading = NULL
-		SetGlobalEntity( "Leader", PK.Leading or NULL )
+		SetGNWVar( "Leader", PK.Leading or NULL )
 	end -- Remove leader.
 
-	ulx.fancyLogAdmin( ply, "#A left the server (#s)", ply:SteamID() )
-
 	-- Remove the players props
-	if GetSetting( "CleanupOnDisconnect" ) then ply:Cleanup() end
-	for _, v in pairs( player.GetAll() ) do v:Notify( Format( "Cleaned up %s's stuff.", ply:Nick() ) ) end
-
-	self.BaseClass:PlayerDisconnected( ply )
+	if GetSetting( "CleanupOnDisconnect" ) then
+		ply:Cleanup()
+		for _, v in pairs( player.GetAll() ) do v:Notify( Format( "Cleaned up %s's stuff.", ply:Nick() ) ) end
+	end
 end
 
 /*---------------------------------------------------------
@@ -837,3 +843,25 @@ function GM:EntityTakeDamage( ent, dmginfo )
 		end
     end
 end
+
+gameevent.Listen( "player_connect" )
+hook.Add( "player_connect", "PlayerJoiningNotification", function( data )
+	local name = data.name
+	local steamid = data.networkid
+
+	ulx.fancyLog( "#s is joining (#s)", name, steamid )
+end )
+
+gameevent.Listen( "player_disconnect" )
+hook.Add( "player_disconnect", "PlayerLeavingNotification", function( data )
+	local name = data.name
+	local steamid = data.networkid
+	local userid = data.userid
+
+	local ply = Player( userid )
+	if ply and ply:IsPlayer() then
+		ulx.fancyLogAdmin( ply, "#A has left the game (#s)", steamid )
+	else
+		ulx.fancyLog( "#s left while joining (#s)", name, steamid )
+	end
+end )

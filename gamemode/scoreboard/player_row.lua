@@ -222,12 +222,26 @@ function PANEL:OpenInfo( bool )
 	else
 		self.TargetSize = 38
 	end
-	
+
 	self.Open = bool
 end
 
 --- Think
 function PANEL:Think()
+	if not IsValid( self.Player ) then
+		for k, v in pairs( Scoreboard.vgui.PlayerRows ) do	
+			if not k:IsValid() then		
+				v:Remove()
+				Scoreboard.vgui.PlayerRows[ k ] = nil			
+			end	
+		end
+
+		Scoreboard.vgui:PerformLayout()
+		Scoreboard.vgui:InvalidateLayout()
+
+		return
+	end
+
 	if self.Size ~= self.TargetSize then	
 		self.Size = math.Approach( self.Size, self.TargetSize, (math.abs( self.Size - self.TargetSize ) + 1) * 10 * FrameTime() )
 		self:PerformLayout()
@@ -279,7 +293,7 @@ function PANEL:HigherOrLower( row )
 	end
 
 	if self.Player:Team() ~= row.Player:Team() then
-		return self.Player:Team() < row.Player:Team()
+		return self.Player:Team() > row.Player:Team()
 	end
 	
 	if self.Player:Frags() == row.Player:Frags() then	

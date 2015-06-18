@@ -65,7 +65,7 @@ else
 			gui.EnableScreenClicker( true )
 
 			Scoreboard.vgui:SetVisible( true )
-			Scoreboard.vgui:UpdateScoreboard( true )
+			Scoreboard.vgui:PerformLayout()
 
 			return true
 		end

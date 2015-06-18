@@ -97,7 +97,7 @@ PK.DefaultSettings[ "FightCoolDown" ] = { value = 300, min = 60, max = 600, type
 PK.DefaultSettings[ "GodPlayerAtSpawn" ] = { value = true, type = SETTING_BOOLEAN, desc = [[God a player at their spawn?]] }
 PK.DefaultSettings[ "GodPlayerAtSpawnTime" ] = { value = 1.2, min = 1, max = 10, type = SETTING_NUMBER, desc = [[How long should the player be goded when spawned?]] }
 PK.DefaultSettings[ "DenySpawningWhileSpawnGoded" ] = { value = true, type = SETTING_BOOLEAN, desc = [[Deny spawning props while a player is goded after spawn?]] }
-PK.DefaultSettings[ "NocolidePlayers" ] = { value = true, type = SETTING_BOOLEAN, public = true, desc = [[Allow players to walk through each other?]] }
+PK.DefaultSettings[ "NocolidePlayers" ] = { value = true, type = SETTING_BOOLEAN, desc = [[Allow players to walk through each other?]] }
 PK.DefaultSettings[ "DeathTime" ] = { value = 1, min = 1, max = 10, type = SETTING_NUMBER, desc = [[How long a player has to stay dead before being able to respawn again.]] }
 
 if file.Exists( "propkill/settings.txt", "DATA" ) then
@@ -163,6 +163,7 @@ PK.DefaultBlockedModels = {
 	"models/props_c17/consolebox01a.mdl",
 	"models/props_buildings/building_002a.mdl",
 	"models/props_phx/cannonball.mdl",
+	"models/props_phx/cannonball_solid.mdl",
 	"models/props_phx/ball.mdl",
 	"models/props_phx/amraam.mdl",
 	"models/props_phx/misc/flakshell_big.mdl",
@@ -186,6 +187,20 @@ PK.DefaultBlockedModels = {
 if file.Exists( "propkill/blockedmodels.txt", "DATA" ) then
 	PK.BlockedModels = util.JSONToTable( file.Read( "propkill/blockedmodels.txt", "DATA" ) )
 	GM:Msg( "Successfully loaded " .. table.Count( PK.BlockedModels ) .. " blocked models." )
+
+	local changed = false
+
+	for k, v in pairs( PK.DefaultBlockedModels ) do
+		if not table.HasValue( PK.BlockedModels, v ) then
+			table.insert( PK.BlockedModels, v )
+			changed = true
+		end
+	end
+
+	if changed then
+		GM:Msg( "Default blocked models are missing and have been appended, saving file..." )
+		file.Write( "propkill/blockedmodels.txt", util.TableToJSON( PK.BlockedModels ) )
+	end -- modified it with default models so save the file.
 else
 	PK.BlockedModels = PK.DefaultBlockedModels
 	GM:Msg( "There is no propkill/blockedmodels.txt, writing a new one with default blocked models." )

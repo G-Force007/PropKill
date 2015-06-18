@@ -86,7 +86,6 @@ end )
 
 PK.PrivateData = PK.PrivateData or {}
 
-PK.CheckedWorkshop = PK.CheckedWorkshop
 net.Receive( "pk_private", function()
 	local ID 	= net.ReadString()
 	local Type 	= net.ReadInt( 4 )

@@ -42,9 +42,17 @@ include( "cl_vgui.lua" )
 CreateClientConVar( "pk_playermodel", "", true, true )
 
 -- Higher rates!
-RunConsoleCommand( "cl_cmdrate", 100 )
-RunConsoleCommand( "cl_updaterate", 100 )
-RunConsoleCommand( "rate", 100000 ) -- why so high? it reduces choke.
+if GetConVar( "cl_cmdrate" ):GetInt() < 100 then
+	RunConsoleCommand( "cl_cmdrate", 100 )
+end
+
+if GetConVar( "cl_updaterate" ):GetInt() < 100 then
+	RunConsoleCommand( "cl_updaterate", 100 )
+end
+
+if GetConVar( "cl_updaterate" ):GetInt() < 100000 then
+	RunConsoleCommand( "rate", 100000 ) -- why so high? it reduces choke.
+end
 
 -- Physgun wheel speed!
 --RunConsoleCommand( "physgun_wheelspeed", 75 )
@@ -69,18 +77,13 @@ hook.Add( "PostGamemodeLoaded", "PostGamemodeLoaded.OverridePropEffect", functio
 	effects.Register( { Init = function() end, Think = function() end, Render = function() end }, "propspawn" )
 end )
 
-function GM:ShouldCollide( ent1, ent2 )
-	if ent1:IsPlayer() and ent2:IsPlayer() and PK.Settings[ "NocolidePlayers" ] and PK.Settings[ "NocolidePlayers" ].value then return false end
-
-	return true -- colide if they're not a player :)
-end
-
 /*---------------------------------------------------------
    Name: GetSetting
    Desc: Gets server settings.
 ---------------------------------------------------------*/
 function GetSetting( key, default )
     local table = PK.Settings[ key ]
+
     return table and table.value or default
 end
 

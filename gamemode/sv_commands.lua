@@ -17,12 +17,15 @@ end )
 ---------------------------------------------------------*/
 concommand.Add( "pk_team", function( ply, cmd, args )
     if not ply:IsPlayer() or not args[1] then return end
+    if ply.lastused and ply.lastused + 2 > CurTime() then return end
+    ply.lastused = CurTime()
 
     for k, v in pairs( Teams ) do
         if v.command == args[1] then
             if PK.FightInProgress then ply:Notify( "There is a fight going on at the moment, if you're fighting then !leavefight and try again." ) return end
     
             ply:ChangeTeam( k )
+            ply:Spawn()
             return
         end
     end

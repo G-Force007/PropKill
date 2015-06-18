@@ -99,7 +99,7 @@ end
 
 -- Rewrite this function, TODO :)
 function Stuff.KillStreaks( ply, victim )
-	if PK.FightInProgress then SetGlobalEntity( "Leader", NULL ) return end
+	if PK.FightInProgress then SetGNWVar( "Leader", NULL ) return end
 
 	Stuff.LeaderKills( ply, victim ) -- Calling this function because this ISNT always called before KillSteaks function
 	
@@ -126,7 +126,7 @@ function Stuff.KillStreaks( ply, victim )
 			end
 		end
 		PK.Leading = ksplayers[ highest ]
-        SetGlobalEntity( "Leader", PK.Leading or NULL )
+        SetGNWVar( "Leader", PK.Leading or NULL )
     end
 
     if #ksplayers == 0 then
@@ -135,5 +135,5 @@ function Stuff.KillStreaks( ply, victim )
     		PK.Leading = NULL
     	end
     end
-    SetGlobalEntity( "Leader", PK.Leading or NULL )
+    SetGNWVar( "Leader", PK.Leading or NULL )
 end
