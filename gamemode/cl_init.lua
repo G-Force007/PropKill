@@ -58,18 +58,22 @@ end
 --RunConsoleCommand( "physgun_wheelspeed", 75 )
 
 -- Falco's rotate :3
-concommand.Add( "falco_rotate1", function()
+local function rotate1()
 	local a = LocalPlayer():EyeAngles()
 	LocalPlayer():SetEyeAngles( Angle( a.p, a.y - 180, a.r ) )
-end )
+end
+concommand.Add( "falco_rotate", rotate1 )
+concommand.Add( "rotate", rotate1 )
 
-concommand.Add( "falco_rotate2", function()
+local function rotate2()
 	RunConsoleCommand( "+jump" )
 	timer.Simple( 0.2, function() RunConsoleCommand("-jump") end )
 
 	local a = LocalPlayer():EyeAngles()
 	LocalPlayer():SetEyeAngles( Angle( a.p - a.p - a.p, a.y - 180, a.r ) )
-end )
+end
+concommand.Add( "falco_rotate2", rotate2 )
+concommand.Add( "rotate2", rotate2 )
 
 -- Remove propspawn effects
 hook.Add( "PostGamemodeLoaded", "PostGamemodeLoaded.OverridePropEffect", function()

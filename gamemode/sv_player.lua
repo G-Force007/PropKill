@@ -636,7 +636,7 @@ function GM:PlayerSpawn( ply )
 				ply.SpawnGoded = nil
 			end
 
-			timer.Simple( GetSetting( "GodPlayerAtSpawnTime" ) or 5, UngodPlayer, ply )
+			timer.Simple( GetSetting( "GodPlayerAtSpawnTime" ) or 5, function() UngodPlayer( ply ) end )
 		else
 			if ply.ULXHasGod then
 				ply:GodDisable()
