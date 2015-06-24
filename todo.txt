@@ -1,1 +1,0 @@
-deattach the gm from ulx

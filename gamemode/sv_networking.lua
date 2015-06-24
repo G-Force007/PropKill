@@ -43,6 +43,7 @@ util.AddNetworkString( "PlayerKilledByPlayer" )
 util.AddNetworkString( "pk_global" )
 util.AddNetworkString( "pk_global_flush" )
 util.AddNetworkString( "pk_private" )
+util.AddNetworkString( "AddText" )
 
 local function GetNWType( Value )
 	if type( Value ) == "Angle" then

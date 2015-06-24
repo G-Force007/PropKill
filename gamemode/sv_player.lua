@@ -18,9 +18,7 @@ function PLAYER:ChangeTeam( t )
 	end
 
 	if PK.FightInProgress == true and table.HasValue( PK.Fighters, self ) then
-		if ulx then
-			ulx.fancyLogAdmin( self, "#A forfeited the fight against #T", self.Fighting )
-		end
+		chatAddText( team.GetColor( self:Team() ), self:Nick(), COLOUR_DEFAULT, " forfeited the fight against ", team.GetColor( self.Fighting:Team() ), self.Fighting:Nick() )
 
 		self:FinishFighting( self.Fighting )
 	end
@@ -307,8 +305,8 @@ function PLAYER:StartFight( ply, limit )
 	SetGNWVar( "Fighter1", PK.Fighter1 )
 	SetGNWVar( "Fighter2", PK.Fighter2 )
 	CommandLog( Format( "%s<%s> started a battle with %s<%s>", ply:Nick(), ply:SteamID(), self:Nick(), self:SteamID() ) )
-	
-	if ulx then ulx.fancyLogAdmin( ply, "#A started a battle with #T", self ) end
+
+	chatAddText( team.GetColor( ply:Team() ), ply:Nick(), COLOUR_DEFAULT, " started a battle with ", team.GetColor( self:Team() ), self:Nick() )
 end
 
 /*---------------------------------------------------------
@@ -354,7 +352,7 @@ function PLAYER:FinishFighting()
 
 	CommandLog( Format( "%s<%s> finished a battle with %s<%s>", ply:Nick(), ply:SteamID(), self:Nick(), self:SteamID() ) )
 
-	if ulx then ulx.fancyLogAdmin( ply, "#A finished a battle with #T", self ) end
+	chatAddText( team.GetColor( ply:Team() ), ply:Nick(), COLOUR_DEFAULT, " finished a battle with ", team.GetColor( self:Team() ), self:Nick() )
 end
 
 /*---------------------------------------------------------
@@ -416,20 +414,20 @@ function GM:DoPlayerDeath( ply, killer, dmginfo )
 	end -- make the player ragdoll :)
 
 	if killer:IsValid() then
-		if ply == killer then ulx.logSpawn( string.format( "%s<%s> suicided.", ply:Nick(), ply:SteamID() ) ) end
+		if ply == killer then ServerLog( Format( "%s<%s> suicided.\n", ply:Nick(), ply:SteamID() ) ) end
 		
 		if killer:GetClass() == "prop_physics" then
 			owner = killer.Owner or NULL
 
 			if owner:IsPlayer() then
 				if owner ~= ply then -- player didnt kill themself.
-					ulx.logSpawn( string.format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
+					ServerLog( Format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
 				else
 					owner = ply:FindClosestOwner()
 					if owner == ply then
-						ulx.logSpawn( string.format( "%s<%s> was prop killed by themself", ply:Nick(), ply:SteamID() ) )
+						ServerLog( Format( "%s<%s> was prop killed by themself", ply:Nick(), ply:SteamID() ) )
 					else
-						ulx.logSpawn( string.format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
+						ServerLog( Format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
 					end
 				end
 			end
@@ -438,9 +436,9 @@ function GM:DoPlayerDeath( ply, killer, dmginfo )
 		owner = ply:FindClosestOwner()
 
 		if owner == ply then
-			ulx.logSpawn( string.format( "%s<%s> was prop killed by themself", ply:Nick(), ply:SteamID() ) )
+			ServerLog( Format( "%s<%s> was prop killed by themself", ply:Nick(), ply:SteamID() ) )
 		else
-			ulx.logSpawn( string.format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
+			ServerLog( Format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
 		end
 	end
 
@@ -466,7 +464,8 @@ function GM:DoPlayerDeath( ply, killer, dmginfo )
 
 	if PK.FightInProgress then
 		if ply:Deaths() >= PK.Frags then
-			ulx.fancyLogAdmin( ply.Fighting, "#A won the fight against #T", ply )
+			chatAddText( team.GetColor( ply.Fighting:Team() ), ply.Fighting:Nick(), COLOUR_DEFAULT, " won the fight against ", team.GetColor( ply:Team() ), ply:Nick() )
+
 			ply.Fighting:SetAchievement( "FightsWon" , ply.Fighting:GetAchievement( "FightsWon" ) + 1 )
 			ply:SetAchievement( "FightsLost" , ply:GetAchievement( "FightsLost" ) + 1 )
 			ply.Fighting:FinishFighting( ply )
@@ -501,7 +500,7 @@ function GM:PlayerInitialSpawn( ply )
 	-- MUST ALWAYS SET TEAM OR YOU GO TO 1001 :D
 	ply:SetTeam( TEAM_SPECTATOR )
 
-	ulx.fancyLogAdmin( ply, "#A has joined the game (#s)", ply:SteamID() )
+	chatAddText( team.GetColor( TEAM_SPECTATOR ), ply:Nick(), COLOUR_DEFAULT, " has joined the game (", team.GetColor( TEAM_BATTLER ), ply:SteamID(), COLOUR_DEFAULT, ")" )
 
 	if not PK.Scores[ ply:SteamID() ] then
 		PK.Scores[ ply:SteamID() ] = {}
@@ -611,9 +610,8 @@ function GM:PlayerSpawn( ply )
 	ply.Dying = false
 
 	if ply:Team() == TEAM_SPECTATOR then
-		-- ULX god the player.
 		ply:GodEnable()
-		ply.ULXHasGod = true
+		ply.HasGod = true
 
 		ply:SetColor( Color( 255, 255, 255, 0 ) )
 		ply:SetGNWVar( "IsSpectating", true )
@@ -638,9 +636,9 @@ function GM:PlayerSpawn( ply )
 
 			timer.Simple( GetSetting( "GodPlayerAtSpawnTime" ) or 5, function() UngodPlayer( ply ) end )
 		else
-			if ply.ULXHasGod then
+			if ply.HasGod then
 				ply:GodDisable()
-				ply.ULXHasGod = false
+				ply.HasGod = false
 			end
 
 			ply:Give( "weapon_physgun" )
@@ -780,7 +778,7 @@ function GM:PlayerDisconnected( ply )
 	if PK.FightInProgress then
 		if table.HasValue( PK.Fighters, ply ) then
 			ply:FinishFighting( ply.Fighting )
-			ulx.fancyLogAdmin( ply, "#A forfeited the fight against #T", ply.Fighting )
+			chatAddText( team.GetColor( ply:Team() ), ply:Nick(), COLOUR_DEFAULT, " forfeited the fight against ", team.GetColor( ply.Fighting:Team() ), ply.Fighting:Nick() )
 		end
 	end
 
@@ -849,7 +847,7 @@ hook.Add( "player_connect", "PlayerJoiningNotification", function( data )
 	local name = data.name
 	local steamid = data.networkid
 
-	ulx.fancyLog( "#s is joining (#s)", name, steamid )
+	chatAddText( team.GetColor( TEAM_SPECTATOR ), name, COLOUR_DEFAULT, " is connecting (", team.GetColor( TEAM_BATTLER ), steamid, COLOUR_DEFAULT, ")" )
 end )
 
 gameevent.Listen( "player_disconnect" )
@@ -860,8 +858,8 @@ hook.Add( "player_disconnect", "PlayerLeavingNotification", function( data )
 
 	local ply = Player( userid )
 	if ply and ply:IsPlayer() then
-		ulx.fancyLogAdmin( ply, "#A has left the game (#s)", steamid )
+		chatAddText( team.GetColor( TEAM_SPECTATOR ), ply:Nick(), COLOUR_DEFAULT, " has left the game (", team.GetColor( TEAM_BATTLER ), steamid, COLOUR_DEFAULT, ")" )
 	else
-		ulx.fancyLog( "#s left while joining (#s)", name, steamid )
+		chatAddText( team.GetColor( TEAM_SPECTATOR ), name, COLOUR_DEFAULT, " left while connecting (", team.GetColor( TEAM_BATTLER ), steamid, COLOUR_DEFAULT, ")" )
 	end
 end )

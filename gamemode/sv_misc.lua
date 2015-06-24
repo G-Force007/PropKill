@@ -6,6 +6,8 @@
 
 PK.Leading = NULL
 
+COLOUR_DEFAULT = Color( 151, 211, 255, 255 )
+
 /*---------------------------------------------------------
    Name: GetSetting
    Desc: Gets server settings.
@@ -49,6 +51,23 @@ function SetSetting( key, value, ply )
     end
 
     WritePKSettings()
+end
+
+function chatAddText( ... )
+  local arg = { ... }
+
+  if type( arg[1] ) == "Player" then ply = arg[1] end
+  
+  net.Start( "AddText" )
+  net.WriteInt( #arg, 32 )
+  for _, v in pairs( arg ) do
+    if type( v ) == "string" then
+      net.WriteString( v )
+    elseif type( v ) == "table" then
+      net.WriteColor( v )
+    end
+  end
+  if not ply then net.Broadcast() else net.Send( ply ) end
 end
 
 /*---------------------------------------------------------

@@ -50,7 +50,7 @@ function ulx.sreset( calling_ply, target_plys )
 end
 local sreset = ulx.command( CATEGORY_NAME, "ulx sreset", ulx.sreset, "!sreset" )
 sreset:addParam{ type=ULib.cmds.PlayersArg }
-sreset:defaultAccess( ULib.ACCESS_ADMIN )
+sreset:defaultAccess( ULib.ACCESS_SUPERADMIN )
 sreset:help( "Resets saved score" )
 
 ------------------------------ Saved Kills ------------------------------
@@ -67,7 +67,7 @@ end
 local skills = ulx.command( CATEGORY_NAME, "ulx skills", ulx.skills, "!skills" )
 skills:addParam{ type=ULib.cmds.PlayersArg }
 skills:addParam{ type=ULib.cmds.NumArg, min=0, default=0, hint="the score", ULib.cmds.optional, ULib.cmds.round }
-skills:defaultAccess( ULib.ACCESS_ADMIN )
+skills:defaultAccess( ULib.ACCESS_SUPERADMIN )
 skills:help( "Changes their saved kills" )
 
 ------------------------------ Saved Deaths ------------------------------
@@ -84,7 +84,7 @@ end
 local sdeaths = ulx.command( CATEGORY_NAME, "ulx sdeaths", ulx.sdeaths, "!sdeaths" )
 sdeaths:addParam{ type=ULib.cmds.PlayersArg }
 sdeaths:addParam{ type=ULib.cmds.NumArg, min=0, default=0, hint="the score", ULib.cmds.optional, ULib.cmds.round }
-sdeaths:defaultAccess( ULib.ACCESS_ADMIN )
+sdeaths:defaultAccess( ULib.ACCESS_SUPERADMIN )
 sdeaths:help( "Changes their saved deaths" )
 
 ------------------------------ Speed ------------------------------
@@ -155,7 +155,7 @@ function ulx.addcustomspawn( calling_ply, team )
 end
 local addcustomspawn = ulx.command( CATEGORY_NAME, "ulx addcustomspawn", ulx.addcustomspawn, "!addcustomspawn" )
 addcustomspawn:addParam{ type=ULib.cmds.StringArg, hint="team", ULib.cmds.takeRestOfLine }
-addcustomspawn:defaultAccess( ULib.ACCESS_ALL )
+addcustomspawn:defaultAccess( ULib.ACCESS_SUPERADMIN )
 addcustomspawn:help( "Add a custom spawn for the map you're currently on" )
 
 ------------------------------ Reset Custom Spawns ------------------------------
@@ -174,7 +174,7 @@ function ulx.resetcustomspawns( calling_ply, team )
 end
 local resetcustomspawns = ulx.command( CATEGORY_NAME, "ulx resetcustomspawns", ulx.resetcustomspawns, "!resetcustomspawns" )
 resetcustomspawns:addParam{ type=ULib.cmds.StringArg, hint="team", ULib.cmds.takeRestOfLine }
-resetcustomspawns:defaultAccess( ULib.ACCESS_ALL )
+resetcustomspawns:defaultAccess( ULib.ACCESS_SUPERADMIN )
 resetcustomspawns:help( "Reset all custom spawns on the map you're currently on" )
 
 ------------------------------ Phys env ------------------------------
@@ -190,5 +190,5 @@ end
 local physenv = ulx.command( CATEGORY_NAME, "ulx physenv", ulx.physenv, "!physenv" )
 physenv:addParam{ type=ULib.cmds.StringArg, hint="MaxVelocity" }
 physenv:addParam{ type=ULib.cmds.StringArg, hint="MaxAngularVelocity" }
-physenv:defaultAccess( ULib.ACCESS_ALL )
+physenv:defaultAccess( ULib.ACCESS_SUPERADMIN )
 physenv:help( "Physenv" )

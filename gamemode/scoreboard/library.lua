@@ -57,7 +57,7 @@ end
 
 -- Reset current session stats (kills/deaths)
 Scoreboard.reset = function( ply )
-  if ply:IsValid() then
+  if ply:IsValid() and ulx then
     Derma_Query( "Reset current session stats for " .. ply:Nick(), "Reset Session Stats",
         "No", function() end,
         "Yes", function() RunConsoleCommand( "ulx", "reset", ply:Nick() ) end )
@@ -67,7 +67,7 @@ end
 -- Reset all stats for player (kills/deaths)
 
 Scoreboard.reset2 = function(ply)
-    if ply:IsValid() then
+    if ply:IsValid() and ulx  then
       Derma_Query( "Reset all saved stats for " .. ply:Nick(), "Reset All Stats",
         "No", function() end,
         "Yes", function() RunConsoleCommand( "ulx", "sreset", ply:Nick() ) end )

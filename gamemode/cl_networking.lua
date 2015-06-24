@@ -311,3 +311,15 @@ net.Receive( "FightInvite", function()
         end
     end )
 end )
+
+net.Receive( "AddText", function()
+  local argc = net.ReadInt( 32 )
+  local args = {}
+
+  for i = 1, argc / 2, 1 do
+    table.insert( args, net.ReadColor() )
+    table.insert( args, net.ReadString() )
+  end
+
+  chat.AddText( unpack( args ) )
+end )

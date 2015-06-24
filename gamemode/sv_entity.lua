@@ -11,14 +11,16 @@ function GM:PhysgunPickup( ply, ent )
 end
 
 -- Remove ULX's access to pickup players.
-timer.Create( "Pickupaccessremove", 5, 0, function()
-	local hooks = hook.GetTable()[ "PhysgunPickup" ]
+if ulx then
+	timer.Create( "Pickupaccessremove", 5, 0, function()
+		local hooks = hook.GetTable()[ "PhysgunPickup" ]
 
-	if hooks and hooks[ "ulxPlayerPickup" ] then
-		hook.Remove( "PhysgunPickup", "ulxPlayerPickup" )
-		timer.Destroy( "Pickupaccessremove" )
-	end
-end )
+		if hooks and hooks[ "ulxPlayerPickup" ] then
+			hook.Remove( "PhysgunPickup", "ulxPlayerPickup" )
+			timer.Destroy( "Pickupaccessremove" )
+		end
+	end )
+end
 
 /*---------------------------------------------------------
    Name: OnPhysgunFreeze
@@ -68,8 +70,7 @@ function GM:PlayerSpawnProp( ply, model )
 	end
 
 	if GetSetting( "DenyDeadSpawning" ) then
-		if not ply:Alive() or ply:GetGNWVar( "IsSpectating", false ) or ply:Team() == 1 then
-			ulx.logSpawn( string.format( "%s<%s> tried to spawn prop %s while dead/spec.", ply:Nick(), ply:SteamID(), model ) )
+		if not ply:Alive() or ply:GetGNWVar( "IsSpectating", false ) or ply:Team() == TEAM_SPECTATOR then
 			if not ply:Alive() then
 				ply:Notify( "Can't spawn props while dead!" )
 			elseif ply:GetGNWVar( "IsSpectating", false ) or ply:Team() == TEAM_SPECTATOR then

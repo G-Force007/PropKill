@@ -123,8 +123,10 @@ function PANEL:PerformLayout()
 		self.btnBan:SetVisible( false )
 		self.btnPBan:SetVisible( false )	
 	else
-		self.btnReset:SetVisible( true )
-		self.btnReset2:SetVisible( true )
+		if ulx then
+			self.btnReset:SetVisible( true )
+			self.btnReset2:SetVisible( true )
+		end
 		self.btnKick:SetVisible( true )
 		self.btnBan:SetVisible( true )
 		self.btnPBan:SetVisible( true )
