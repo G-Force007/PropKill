@@ -134,8 +134,8 @@ function GM:OnEntityCreated( entity )
 		if entity:GetClass() ~= "prop_physics" or entity2:GetClass() ~= "prop_physics" then return end
 
 		if physobj:IsPenetrating() or physobj2:IsPenetrating() then
-			physobj:Sleep()
-			physobj2:Sleep()
+			physobj:EnableMotion( false )
+			physobj2:EnableMotion( false )
 		end
 	end )
 end
