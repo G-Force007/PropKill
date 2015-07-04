@@ -181,7 +181,7 @@ function PLAYER:SetAchievement( key, value, dontinform )
 		net.WriteEntity( self )
 		net.WriteString( key )
 		net.WriteInt( value, 15 )
-	net.Send(self)
+	net.Send( self )
 end
 
 /*---------------------------------------------------------
@@ -322,8 +322,8 @@ function PLAYER:FinishFighting()
 	local ply = self.Fighting -- define it here so we don't need to always know who someone is fighting when calling this function :)
 	
 	PK.Fighters = {}
-	PK.Figher1 = nil
-	PK.Figher2 = nil
+	PK.Fighter1 = nil
+	PK.Fighter2 = nil
 
 	self.Fighting = nil
 	ply.Fighting = nil
@@ -347,8 +347,8 @@ function PLAYER:FinishFighting()
 	self:SetDeaths( 0 )
 
 	SetGNWVar( "FightInProgress", false )
-	SetGNWVar( "Figher1", nil )
-	SetGNWVar( "Figher2", nil )
+	SetGNWVar( "Fighter1", nil )
+	SetGNWVar( "Fighter2", nil )
 
 	CommandLog( Format( "%s<%s> finished a battle with %s<%s>", ply:Nick(), ply:SteamID(), self:Nick(), self:SteamID() ) )
 
@@ -435,10 +435,14 @@ function GM:DoPlayerDeath( ply, killer, dmginfo )
 	elseif killer:GetClass() == "worldspawn" then
 		owner = ply:FindClosestOwner()
 
-		if owner == ply then
-			ServerLog( Format( "%s<%s> was prop killed by themself", ply:Nick(), ply:SteamID() ) )
+		if owner:IsPlayer() then
+			if owner == ply then
+				ServerLog( Format( "%s<%s> was prop killed by themself", ply:Nick(), ply:SteamID() ) )
+			else
+				ServerLog( Format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
+			end
 		else
-			ServerLog( Format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
+			ServerLog( Format( "%s<%s> was killed by gravity", ply:Nick(), ply:SteamID() ) )
 		end
 	end
 
