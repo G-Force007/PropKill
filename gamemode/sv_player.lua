@@ -442,7 +442,7 @@ function GM:DoPlayerDeath( ply, killer, dmginfo )
 				ServerLog( Format( "%s<%s> was prop killed by %s<%s>", ply:Nick(), ply:SteamID(), owner:Nick(), owner:SteamID() ) )
 			end
 		else
-			ServerLog( Format( "%s<%s> was prop killed by themself", ply:Nick(), ply:SteamID() ) )
+			ServerLog( Format( "%s<%s> was killed by gravity", ply:Nick(), ply:SteamID() ) )
 		end
 	end
 
